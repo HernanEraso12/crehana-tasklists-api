@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from app.domain.exceptions import TaskListNotFoundError
+from app.domain.exceptions import TaskListNotFoundError, TaskNotFoundError
 from app.domain.repositories import TaskListRepository, TaskRepository
 from app.domain.task import Task
 from app.domain.task_list import TaskList
@@ -27,9 +27,9 @@ def get_task_or_raise(
     luego obtiene la tarea o lanza TaskNotFoundError(task_id) si no
     existe o si existe en otra lista (B9: no se revela que existe en
     otra). Reutilizable para obtener, actualizar, cambiar estado y
-    eliminar tareas.
-
-    Stub temporal: todavía no valida existencia ni pertenencia a la
-    lista (rojo pendiente de GREEN)."""
+    eliminar tareas."""
     get_task_list_or_raise(task_list_repository, list_id)
-    return task_repository.get(task_id)
+    task = task_repository.get(task_id)
+    if task is None or task.list_id != list_id:
+        raise TaskNotFoundError(task_id)
+    return task
