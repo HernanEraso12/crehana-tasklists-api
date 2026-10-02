@@ -19,4 +19,4 @@ class DeleteTask:
         get_task_or_raise(
             self.task_list_repository, self.task_repository, list_id, task_id
         )
-        # Stub temporal: todavía no borra nada (rojo pendiente de GREEN).
+        self.task_repository.delete(task_id)
