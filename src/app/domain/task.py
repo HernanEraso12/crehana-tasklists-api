@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from app.domain.clock import utcnow
+from app.domain import clock
 from app.domain.enums import Priority, TaskStatus
 from app.domain.exceptions import InvalidTaskError
 
@@ -19,8 +19,8 @@ class Task:
     priority: Priority = Priority.MEDIUM
     status: TaskStatus = TaskStatus.PENDING
     id: UUID = field(default_factory=uuid4)
-    created_at: datetime = field(default_factory=utcnow)
-    updated_at: datetime = field(default_factory=utcnow)
+    created_at: datetime = field(default_factory=lambda: clock.utcnow())
+    updated_at: datetime = field(default_factory=lambda: clock.utcnow())
 
     def __post_init__(self) -> None:
         self.title = self.title.strip()
