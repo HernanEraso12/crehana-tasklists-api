@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.Python
+
+# Entornos virtuales / uv
+.venv/
+uv.lock.bak
+
+# Tests y cobertura
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Bases de datos locales
+*.db
+*.sqlite3
+
+# Entorno / secretos
+.env
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Andamiaje de Claude Code (D7: por ahora no se sube)
+.claude/
+CLAUDE.md

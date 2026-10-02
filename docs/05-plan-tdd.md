@@ -1,0 +1,71 @@
+# Plan de implementación con TDD
+
+Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al completar.
+
+## Fase 0 — Esqueleto (sin lógica, un solo commit `chore:`)
+
+- [ ] Estructura de carpetas, `pyproject.toml` con `uv`, `pytest.ini`, `.flake8`, config de black/isort
+- [ ] `.gitignore`, `.env.example`, `Makefile`
+- [ ] Un test trivial que pase para validar que pytest y la cobertura funcionan
+
+## Fase 1 — Dominio (`tests/unit/domain`)
+
+- [ ] `TaskStatus` y `Priority` solo aceptan valores válidos
+- [ ] Crear `TaskList` con nombre válido; rechaza vacío, solo espacios y > 100 caracteres
+- [ ] Crear `Task` con estado inicial `PENDING` y prioridad por defecto `MEDIUM`
+- [ ] `Task` rechaza título vacío o > 200 caracteres
+- [ ] `task.change_status(...)` permite cualquier transición y actualiza `updated_at`
+- [ ] Cálculo de completitud: 0 tareas → 0.0; 0 de 3 → 0.0; 1 de 3 → 33.33; 3 de 3 → 100.0
+
+## Fase 2 — Casos de uso de listas (`tests/unit/application`, con fakes)
+
+- [ ] Crear lista
+- [ ] Obtener lista existente / inexistente → `TaskListNotFoundError`
+- [ ] Listar listas con paginación
+- [ ] Actualizar lista (parcial) / inexistente
+- [ ] Eliminar lista / inexistente
+
+## Fase 3 — Casos de uso de tareas
+
+- [ ] Crear tarea en lista existente / en lista inexistente → `TaskListNotFoundError`
+- [ ] Obtener tarea / inexistente / de otra lista → `TaskNotFoundError`
+- [ ] Actualizar tarea (sin tocar estado)
+- [ ] Eliminar tarea
+- [ ] Cambiar estado (incluye `COMPLETED` → `PENDING` e idempotencia)
+
+## Fase 4 — Listado con filtros y completitud
+
+- [ ] Filtrar por estado, por prioridad y combinados
+- [ ] `total` refleja el filtro; `completion_percentage` es global
+- [ ] La completitud cambia al completar, reabrir y eliminar tareas
+
+## Fase 5 — Persistencia (`tests/integration/persistence`)
+
+- [ ] Suite de contrato parametrizada: misma batería contra fake y repositorio SQLAlchemy
+- [ ] Borrado en cascada lista → tareas
+- [ ] Completitud calculada con agregación SQL
+- [ ] Migración inicial de Alembic
+
+## Fase 6 — API (`tests/integration/api`, `TestClient` + SQLite)
+
+- [ ] CRUD de listas: códigos 201/200/204/404/422 y header `Location`
+- [ ] CRUD de tareas, incluido el 404 de tarea en otra lista
+- [ ] `PATCH .../status`
+- [ ] Listado filtrado con completitud
+- [ ] Formato de error único (404 y 422)
+- [ ] UUID inválido → 422
+- [ ] `/health`
+
+## Fase 7 — Entrega
+
+- [ ] Dockerfile multistage + `docker-compose.yml` con PostgreSQL; probar `docker compose up` desde cero
+- [ ] GitHub Actions
+- [ ] `README.md`
+- [ ] `DECISION_LOG.md` (a partir de `docs/03-decisiones.md`) con sección de pendientes
+- [ ] Verificar cobertura ≥ 75%, flake8, black e isort en limpio
+
+## Fase 8 — Bonus (solo si sobra tiempo)
+
+- [ ] Notificación ficticia (`Notifier` + `LoggingNotifier`)
+- [ ] Usuarios + asignación de responsable
+- [ ] JWT
