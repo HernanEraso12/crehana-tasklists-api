@@ -21,6 +21,6 @@ class ChangeTaskStatus:
         task = get_task_or_raise(
             self.task_list_repository, self.task_repository, list_id, task_id
         )
-        # Stub temporal: todavía no cambia el estado ni persiste
-        # (rojo pendiente de GREEN).
+        task.change_status(status)
+        self.task_repository.update(task)
         return task
