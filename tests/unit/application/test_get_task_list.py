@@ -21,7 +21,9 @@ def test_returns_the_existing_task_list() -> None:
 
     result = use_case.execute(list_id=existing.id)
 
-    assert result is existing
+    # El repo devuelve una copia (fakes.py): se compara por valor, no
+    # por identidad de referencia.
+    assert result == existing
 
 
 def test_raises_not_found_with_the_id_when_missing() -> None:

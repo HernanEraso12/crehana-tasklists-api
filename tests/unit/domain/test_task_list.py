@@ -1,8 +1,13 @@
 """Validación del nombre de TaskList (B5): obligatorio, 1-100 caracteres,
-se recorta espacios al inicio o al final, no vacío tras recortar."""
+se recorta espacios al inicio o al final, no vacío tras recortar.
+También: TaskList.update(...) actualiza parcialmente (C2), valida igual
+que al crear y solo toca updated_at si algo cambió."""
+
+from datetime import datetime, timezone
 
 import pytest
 
+from app.domain import clock
 from app.domain.exceptions import InvalidTaskListError
 from app.domain.task_list import TaskList
 
@@ -40,3 +45,58 @@ def test_accepts_name_of_exactly_100_characters() -> None:
     task_list = TaskList(name="a" * 100)
 
     assert len(task_list.name) == 100
+
+
+def test_update_changes_name_and_keeps_description() -> None:
+    task_list = TaskList(name="Sprint 12", description="Original")
+
+    task_list.update(name="Sprint 13")
+
+    assert task_list.name == "Sprint 13"
+    assert task_list.description == "Original"
+
+
+def test_update_clears_description_with_none() -> None:
+    task_list = TaskList(name="Sprint 12", description="Original")
+
+    task_list.update(description=None)
+
+    assert task_list.name == "Sprint 12"
+    assert task_list.description is None
+
+
+def test_update_without_arguments_keeps_everything_unchanged() -> None:
+    task_list = TaskList(name="Sprint 12", description="Original")
+
+    task_list.update()
+
+    assert task_list.name == "Sprint 12"
+    assert task_list.description == "Original"
+
+
+def test_update_rejects_invalid_name_without_changing_anything() -> None:
+    task_list = TaskList(name="Sprint 12", description="Original")
+
+    with pytest.raises(InvalidTaskListError):
+        task_list.update(name="   ")
+
+    assert task_list.name == "Sprint 12"
+    assert task_list.description == "Original"
+
+
+def test_update_only_touches_updated_at_when_something_changes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    creation_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    monkeypatch.setattr(clock, "utcnow", lambda: creation_time)
+    task_list = TaskList(name="Sprint 12")
+
+    later_time = datetime(2026, 1, 2, tzinfo=timezone.utc)
+    monkeypatch.setattr(clock, "utcnow", lambda: later_time)
+    task_list.update()  # sin argumentos: nada cambia
+
+    assert task_list.updated_at == creation_time
+
+    task_list.update(name="Sprint 13")
+
+    assert task_list.updated_at == later_time

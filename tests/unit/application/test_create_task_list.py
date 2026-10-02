@@ -18,7 +18,9 @@ def test_creates_and_persists_the_task_list() -> None:
 
     assert task_list.name == "Sprint 12"
     assert task_list.description == "Opcional"
-    assert repository.lists.get(task_list.id) is task_list
+    # El repo guarda una copia (fakes.py): se compara por valor, no por
+    # identidad de referencia.
+    assert repository.lists.get(task_list.id) == task_list
 
 
 def test_propagates_invalid_name_without_saving_anything() -> None:

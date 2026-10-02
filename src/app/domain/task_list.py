@@ -6,6 +6,7 @@ from uuid import UUID, uuid4
 
 from app.domain import clock
 from app.domain.exceptions import InvalidTaskListError
+from app.domain.sentinels import UNSET, _Unset
 
 MAX_NAME_LENGTH = 100
 
@@ -27,3 +28,10 @@ class TaskList:
                 f"El nombre de la lista no puede superar los "
                 f"{MAX_NAME_LENGTH} caracteres."
             )
+
+    def update(
+        self,
+        name: str | _Unset = UNSET,
+        description: str | None | _Unset = UNSET,
+    ) -> None:
+        """Stub temporal: no hace nada todavía (rojo pendiente de GREEN)."""
