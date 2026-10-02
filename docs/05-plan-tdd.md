@@ -22,7 +22,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 - [x] Crear lista
 - [x] Obtener lista existente / inexistente → `TaskListNotFoundError`
 - [x] Listar listas con paginación
-- [ ] Actualizar lista (parcial) / inexistente
+- [x] Actualizar lista (parcial) / inexistente
 - [ ] Eliminar lista / inexistente
 
 ## Fase 3 — Casos de uso de tareas

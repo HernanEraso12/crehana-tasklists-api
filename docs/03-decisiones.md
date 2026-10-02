@@ -41,7 +41,7 @@
 | # | Decisión | Estado |
 |---|---|---|
 | C1 | Prefijo de versión `/api/v1` | Tomada |
-| C2 | Actualizaciones con **PATCH parcial**. Body sin campos → 422 | Tomada |
+| C2 | Actualizaciones con **PATCH parcial**. Body sin campos → 422. El dominio y los casos de uso distinguen "campo no enviado" de "campo enviado como `null`" con un sentinel `UNSET` (`app.domain.sentinels`): `description=None` la borra, no enviarla la conserva. La capa API (Fase 6) traduce esto desde `model_fields_set` de Pydantic | Tomada |
 | C3 | El estado **no** se cambia por el PATCH general: solo por `PATCH .../status`. Un caso de uso, un endpoint (SRP) | Tomada |
 | C4 | Filtros `status` y `priority` opcionales y **combinables** (AND), un valor cada uno | Tomada |
 | C5 | Paginación `limit` (defecto 20, máx. 100) y `offset` en listados | Tomada |
