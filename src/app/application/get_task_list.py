@@ -2,6 +2,7 @@
 
 from uuid import UUID
 
+from app.domain.exceptions import TaskListNotFoundError
 from app.domain.repositories import TaskListRepository
 from app.domain.task_list import TaskList
 
@@ -11,6 +12,7 @@ class GetTaskList:
         self.repository = repository
 
     def execute(self, list_id: UUID) -> TaskList:
-        """Stub temporal: devuelve lo que diga el repositorio, incluido
-        None, sin lanzar TaskListNotFoundError (rojo pendiente de GREEN)."""
-        return self.repository.get(list_id)
+        task_list = self.repository.get(list_id)
+        if task_list is None:
+            raise TaskListNotFoundError(list_id)
+        return task_list
