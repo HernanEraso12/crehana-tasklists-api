@@ -7,6 +7,7 @@ from uuid import UUID
 
 from app.application.common import get_task_list_or_raise
 from app.application.page import TaskPage
+from app.domain.completion import completion_percentage
 from app.domain.enums import Priority, TaskStatus
 from app.domain.repositories import TaskListRepository, TaskRepository
 
@@ -35,12 +36,11 @@ class ListTasks:
         total = self.task_repository.count_by_list(
             list_id, status=status, priority=priority
         )
-        # Stub temporal: completion_percentage fijo en 0.0, ignora los
-        # conteos reales (rojo pendiente de GREEN).
+        completed, overall_total = self.task_repository.completion_counts(list_id)
         return TaskPage(
             items=items,
             total=total,
             limit=limit,
             offset=offset,
-            completion_percentage=0.0,
+            completion_percentage=completion_percentage(completed, overall_total),
         )
