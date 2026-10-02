@@ -15,7 +15,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 - [x] Crear `Task` con estado inicial `PENDING` y prioridad por defecto `MEDIUM`
 - [x] `Task` rechaza título vacío o > 200 caracteres
 - [x] `task.change_status(...)` permite cualquier transición y actualiza `updated_at`
-- [ ] Cálculo de completitud: 0 tareas → 0.0; 0 de 3 → 0.0; 1 de 3 → 33.33; 3 de 3 → 100.0
+- [x] Cálculo de completitud: 0 tareas → 0.0; 0 de 3 → 0.0; 1 de 3 → 33.33; 3 de 3 → 100.0
 
 ## Fase 2 — Casos de uso de listas (`tests/unit/application`, con fakes)
 

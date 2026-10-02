@@ -47,7 +47,7 @@
 | C5 | Paginación `limit` (defecto 20, máx. 100) y `offset` en listados | Tomada |
 | C6 | Orden por `created_at` ascendente | Tomada |
 | C7 | Respuesta del listado de tareas: `items`, `total` (filtrado), `limit`, `offset`, `completion_percentage` | Tomada |
-| C8 | `completion_percentage` = completadas / totales × 100 sobre **toda la lista, sin filtros**; float con 2 decimales; **0.0** si la lista no tiene tareas; calculado con agregación SQL, no cargando tareas en memoria | Tomada |
+| C8 | `completion_percentage` = completadas / totales × 100 sobre **toda la lista, sin filtros**; float con 2 decimales; **0.0** si la lista no tiene tareas; calculado con agregación SQL, no cargando tareas en memoria. La fórmula y el redondeo viven en `domain.completion.completion_percentage(completed, total)`, una función pura; la agregación SQL (Fase 5) solo obtiene los conteos y delega el cálculo a esta función | Tomada |
 | C9 | Formato de error único: `{"error": {"code", "message", "details"}}`, incluyendo los 422 de validación | Tomada |
 | C10 | 201 incluye header `Location` con la URL del recurso creado | Tomada |
 | C11 | Sin HATEOAS completo: OpenAPI cubre el descubrimiento. Links solo en `Location` | Tomada |
