@@ -35,8 +35,8 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 
 ## Fase 4 — Listado con filtros y completitud
 
-- [ ] Filtrar por estado, por prioridad y combinados
-- [ ] `total` refleja el filtro; `completion_percentage` es global
+- [x] Filtrar por estado, por prioridad y combinados
+- [ ] `total` refleja el filtro (hecho en `ListTasks`); falta integrar `completion_percentage` (global, pendiente)
 - [ ] La completitud cambia al completar, reabrir y eliminar tareas
 
 ## Fase 5 — Persistencia (`tests/integration/persistence`)
