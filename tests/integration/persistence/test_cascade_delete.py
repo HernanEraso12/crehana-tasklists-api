@@ -4,31 +4,18 @@ activo), no algo que decida el repositorio en Python. Por eso corre
 solo contra SQLAlchemy, aparte de la suite de contrato."""
 
 import pytest
-from sqlalchemy.orm import Session
 
 from app.domain.task import Task
 from app.domain.task_list import TaskList
-from app.infrastructure.persistence.database import Base
-from app.infrastructure.persistence.sqlalchemy_task_list_repository import (
-    SqlAlchemyTaskListRepository,
+from tests.integration.persistence.sqlite_support import (
+    create_sqlalchemy_repositories,
 )
-from app.infrastructure.persistence.sqlalchemy_task_repository import (
-    SqlAlchemyTaskRepository,
-)
-from tests.integration.persistence.sqlite_support import create_in_memory_sqlite_engine
 
 pytestmark = pytest.mark.integration
 
 
-def _repositories() -> tuple[SqlAlchemyTaskListRepository, SqlAlchemyTaskRepository]:
-    engine = create_in_memory_sqlite_engine()
-    Base.metadata.create_all(engine)
-    session = Session(engine)
-    return SqlAlchemyTaskListRepository(session), SqlAlchemyTaskRepository(session)
-
-
 def test_deleting_a_list_cascades_to_its_tasks() -> None:
-    task_list_repository, task_repository = _repositories()
+    task_list_repository, task_repository = create_sqlalchemy_repositories()
     task_list = TaskList(name="Sprint 12")
     task_list_repository.add(task_list)
     task = Task(title="Escribir tests", list_id=task_list.id)
@@ -41,7 +28,7 @@ def test_deleting_a_list_cascades_to_its_tasks() -> None:
 
 
 def test_deleting_a_list_does_not_affect_tasks_of_other_lists() -> None:
-    task_list_repository, task_repository = _repositories()
+    task_list_repository, task_repository = create_sqlalchemy_repositories()
     list_a = TaskList(name="Lista A")
     list_b = TaskList(name="Lista B")
     task_list_repository.add(list_a)

@@ -9,21 +9,15 @@ from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
 import pytest
-from sqlalchemy.orm import Session
 
 from app.domain import clock
 from app.domain.enums import Priority, TaskStatus
 from app.domain.task import Task
 from app.domain.task_list import TaskList
-from app.infrastructure.persistence.database import Base
-from app.infrastructure.persistence.sqlalchemy_task_list_repository import (
-    SqlAlchemyTaskListRepository,
-)
-from app.infrastructure.persistence.sqlalchemy_task_repository import (
-    SqlAlchemyTaskRepository,
-)
 from tests.fakes import InMemoryTaskListRepository, InMemoryTaskRepository
-from tests.integration.persistence.sqlite_support import create_in_memory_sqlite_engine
+from tests.integration.persistence.sqlite_support import (
+    create_sqlalchemy_repositories,
+)
 
 pytestmark = pytest.mark.integration
 
@@ -34,20 +28,11 @@ def _make_fake_repositories() -> (
     return InMemoryTaskListRepository(), InMemoryTaskRepository()
 
 
-def _make_sqlalchemy_repositories() -> (
-    tuple[SqlAlchemyTaskListRepository, SqlAlchemyTaskRepository]
-):
-    engine = create_in_memory_sqlite_engine()
-    Base.metadata.create_all(engine)
-    session = Session(engine)
-    return SqlAlchemyTaskListRepository(session), SqlAlchemyTaskRepository(session)
-
-
 @pytest.fixture(params=["fake", "sqlalchemy"])
 def repositories(request: pytest.FixtureRequest):
     if request.param == "fake":
         return _make_fake_repositories()
-    return _make_sqlalchemy_repositories()
+    return create_sqlalchemy_repositories()
 
 
 def _new_list(task_list_repository, name: str = "Sprint 12") -> TaskList:

@@ -8,25 +8,23 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 import pytest
-from sqlalchemy.orm import Session
 
 from app.domain import clock
 from app.domain.task_list import TaskList
-from app.infrastructure.persistence.database import Base
 from app.infrastructure.persistence.sqlalchemy_task_list_repository import (
     SqlAlchemyTaskListRepository,
 )
 from tests.fakes import InMemoryTaskListRepository
-from tests.integration.persistence.sqlite_support import create_in_memory_sqlite_engine
+from tests.integration.persistence.sqlite_support import (
+    create_sqlalchemy_repositories,
+)
 
 pytestmark = pytest.mark.integration
 
 
 def _make_sqlalchemy_repository() -> SqlAlchemyTaskListRepository:
-    engine = create_in_memory_sqlite_engine()
-    Base.metadata.create_all(engine)
-    session = Session(engine)
-    return SqlAlchemyTaskListRepository(session)
+    task_list_repository, _task_repository = create_sqlalchemy_repositories()
+    return task_list_repository
 
 
 @pytest.fixture(params=["fake", "sqlalchemy"])
