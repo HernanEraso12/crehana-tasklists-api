@@ -14,6 +14,7 @@ from sqlalchemy.pool import StaticPool
 
 from app.domain import clock
 from app.domain.task_list import TaskList
+from app.infrastructure.persistence.database import Base
 from app.infrastructure.persistence.sqlalchemy_task_list_repository import (
     SqlAlchemyTaskListRepository,
 )
@@ -35,6 +36,7 @@ def _make_sqlalchemy_repository() -> SqlAlchemyTaskListRepository:
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 
+    Base.metadata.create_all(engine)
     session = Session(engine)
     return SqlAlchemyTaskListRepository(session)
 
