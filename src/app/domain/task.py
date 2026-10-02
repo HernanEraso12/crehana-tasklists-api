@@ -5,6 +5,9 @@ from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
 from app.domain.enums import Priority, TaskStatus
+from app.domain.exceptions import InvalidTaskError
+
+MAX_TITLE_LENGTH = 200
 
 
 def _utcnow() -> datetime:
@@ -21,3 +24,13 @@ class Task:
     id: UUID = field(default_factory=uuid4)
     created_at: datetime = field(default_factory=_utcnow)
     updated_at: datetime = field(default_factory=_utcnow)
+
+    def __post_init__(self) -> None:
+        self.title = self.title.strip()
+        if not self.title:
+            raise InvalidTaskError("El título de la tarea es obligatorio.")
+        if len(self.title) > MAX_TITLE_LENGTH:
+            raise InvalidTaskError(
+                f"El título de la tarea no puede superar los "
+                f"{MAX_TITLE_LENGTH} caracteres."
+            )
