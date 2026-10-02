@@ -24,14 +24,21 @@ class Task:
     updated_at: datetime = field(default_factory=lambda: clock.utcnow())
 
     def __post_init__(self) -> None:
-        self.title = self.title.strip()
-        if not self.title:
+        self.title = self._validated_title(self.title)
+
+    @staticmethod
+    def _validated_title(title: str) -> str:
+        """Recorta y valida un título de tarea (B6). Lo usan tanto la
+        creación como `update`, para que ambas exijan lo mismo."""
+        stripped = title.strip()
+        if not stripped:
             raise InvalidTaskError("El título de la tarea es obligatorio.")
-        if len(self.title) > MAX_TITLE_LENGTH:
+        if len(stripped) > MAX_TITLE_LENGTH:
             raise InvalidTaskError(
                 f"El título de la tarea no puede superar los "
                 f"{MAX_TITLE_LENGTH} caracteres."
             )
+        return stripped
 
     def change_status(self, new_status: TaskStatus) -> None:
         """Cambia el estado (B2). Cualquier transición está permitida.
@@ -55,14 +62,7 @@ class Task:
         changed = False
 
         if title is not UNSET:
-            new_title = title.strip()
-            if not new_title:
-                raise InvalidTaskError("El título de la tarea es obligatorio.")
-            if len(new_title) > MAX_TITLE_LENGTH:
-                raise InvalidTaskError(
-                    f"El título de la tarea no puede superar los "
-                    f"{MAX_TITLE_LENGTH} caracteres."
-                )
+            new_title = self._validated_title(title)
             if new_title != self.title:
                 self.title = new_title
                 changed = True
