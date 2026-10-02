@@ -52,3 +52,6 @@ class InMemoryTaskRepository:
 
     def update(self, task: Task) -> None:
         self.tasks[task.id] = deepcopy(task)
+
+    def delete(self, task_id: UUID) -> None:
+        self.tasks.pop(task_id, None)
