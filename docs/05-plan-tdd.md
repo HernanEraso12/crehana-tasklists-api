@@ -28,7 +28,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 ## Fase 3 — Casos de uso de tareas
 
 - [x] Crear tarea en lista existente / en lista inexistente → `TaskListNotFoundError`
-- [ ] Obtener tarea / inexistente / de otra lista → `TaskNotFoundError`
+- [x] Obtener tarea / inexistente / de otra lista → `TaskNotFoundError`
 - [ ] Actualizar tarea (sin tocar estado)
 - [ ] Eliminar tarea
 - [ ] Cambiar estado (incluye `COMPLETED` → `PENDING` e idempotencia)
