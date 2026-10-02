@@ -90,3 +90,8 @@ class InMemoryTaskRepository:
         priority: Priority | None = None,
     ) -> int:
         return len(self._filtered_by_list(list_id, status, priority))
+
+    def completion_counts(self, list_id: UUID) -> tuple[int, int]:
+        all_in_list = self._filtered_by_list(list_id, status=None, priority=None)
+        completed = sum(1 for t in all_in_list if t.status == TaskStatus.COMPLETED)
+        return completed, len(all_in_list)

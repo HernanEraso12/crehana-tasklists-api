@@ -48,3 +48,9 @@ class TaskRepository(Protocol):
         status: TaskStatus | None = None,
         priority: Priority | None = None,
     ) -> int: ...
+
+    def completion_counts(self, list_id: UUID) -> tuple[int, int]:
+        """Devuelve (completadas, totales) de toda la lista, sin
+        filtros (C8). Pensado para resolverse con una agregación SQL
+        en la implementación real; aquí solo es la interfaz."""
+        ...

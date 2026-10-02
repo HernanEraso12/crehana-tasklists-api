@@ -1,12 +1,14 @@
 """Caso de uso ListTasks: filtros (C4, combinables con AND), paginación
-(C5) y orden por created_at (C6). El porcentaje de completitud no es
-parte de este caso de uso."""
+(C5), orden por created_at (C6) y porcentaje de completitud global
+(C7, C8): ignora los filtros y se recalcula con cada cambio real."""
 
 from datetime import datetime, timezone
 from uuid import UUID
 
 import pytest
 
+from app.application.change_task_status import ChangeTaskStatus
+from app.application.delete_task import DeleteTask
 from app.application.list_tasks import ListTasks
 from app.domain import clock
 from app.domain.enums import Priority, TaskStatus
@@ -253,3 +255,172 @@ def test_raises_task_list_not_found_for_missing_list() -> None:
         use_case.execute(
             list_id=UUID("00000000-0000-0000-0000-000000000000"), limit=20, offset=0
         )
+
+
+def test_completion_percentage_is_zero_for_empty_list() -> None:
+    task_list_repository, task_repository, task_list = _repositories_with_list()
+    use_case = ListTasks(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+
+    page = use_case.execute(list_id=task_list.id, limit=20, offset=0)
+
+    assert page.completion_percentage == 0.0
+
+
+def test_completion_percentage_reflects_completed_over_total(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_list_repository, task_repository, task_list = _repositories_with_list()
+    for i, status in enumerate(
+        (TaskStatus.COMPLETED, TaskStatus.PENDING, TaskStatus.PENDING)
+    ):
+        task = _task_created_at(
+            monkeypatch,
+            task_list.id,
+            f"Task {i}",
+            datetime(2026, 1, i + 1, tzinfo=timezone.utc),
+            status=status,
+        )
+        task_repository.add(task)
+    use_case = ListTasks(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+
+    page = use_case.execute(list_id=task_list.id, limit=20, offset=0)
+
+    assert page.completion_percentage == 33.33
+
+
+def test_completion_percentage_ignores_filters(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_list_repository, task_repository, task_list = _repositories_with_list()
+    for i, (status, priority) in enumerate(
+        (
+            (TaskStatus.COMPLETED, Priority.LOW),
+            (TaskStatus.PENDING, Priority.HIGH),
+            (TaskStatus.PENDING, Priority.HIGH),
+        )
+    ):
+        task = _task_created_at(
+            monkeypatch,
+            task_list.id,
+            f"Task {i}",
+            datetime(2026, 1, i + 1, tzinfo=timezone.utc),
+            status=status,
+            priority=priority,
+        )
+        task_repository.add(task)
+    use_case = ListTasks(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+
+    unfiltered = use_case.execute(list_id=task_list.id, limit=20, offset=0)
+    filtered_by_high = use_case.execute(
+        list_id=task_list.id, limit=20, offset=0, priority=Priority.HIGH
+    )
+
+    # El filtro reduce items/total (2 de 3 son HIGH), pero el
+    # porcentaje de completitud es el mismo: ignora los filtros.
+    assert len(filtered_by_high.items) == 2
+    assert filtered_by_high.total == 2
+    assert unfiltered.completion_percentage == 33.33
+    assert filtered_by_high.completion_percentage == 33.33
+
+
+def test_completion_percentage_increases_after_completing_a_task(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_list_repository, task_repository, task_list = _repositories_with_list()
+    tasks = [
+        _task_created_at(
+            monkeypatch,
+            task_list.id,
+            f"Task {i}",
+            datetime(2026, 1, i + 1, tzinfo=timezone.utc),
+        )
+        for i in range(3)
+    ]
+    for task in tasks:
+        task_repository.add(task)
+    change_status = ChangeTaskStatus(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+    list_tasks = ListTasks(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+
+    change_status.execute(
+        list_id=task_list.id, task_id=tasks[0].id, status=TaskStatus.COMPLETED
+    )
+    page = list_tasks.execute(list_id=task_list.id, limit=20, offset=0)
+
+    assert page.completion_percentage == 33.33
+
+
+def test_completion_percentage_decreases_after_reopening_a_task(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_list_repository, task_repository, task_list = _repositories_with_list()
+    tasks = [
+        _task_created_at(
+            monkeypatch,
+            task_list.id,
+            f"Task {i}",
+            datetime(2026, 1, i + 1, tzinfo=timezone.utc),
+            status=TaskStatus.COMPLETED,
+        )
+        for i in range(3)
+    ]
+    for task in tasks:
+        task_repository.add(task)
+    change_status = ChangeTaskStatus(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+    list_tasks = ListTasks(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+    before = list_tasks.execute(list_id=task_list.id, limit=20, offset=0)
+    assert before.completion_percentage == 100.0
+
+    change_status.execute(
+        list_id=task_list.id, task_id=tasks[0].id, status=TaskStatus.PENDING
+    )
+    after = list_tasks.execute(list_id=task_list.id, limit=20, offset=0)
+
+    assert after.completion_percentage == 66.67
+
+
+def test_completion_percentage_recalculates_after_deleting_a_task(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task_list_repository, task_repository, task_list = _repositories_with_list()
+    tasks = [
+        _task_created_at(
+            monkeypatch,
+            task_list.id,
+            f"Task {i}",
+            datetime(2026, 1, i + 1, tzinfo=timezone.utc),
+            status=status,
+        )
+        for i, status in enumerate(
+            (TaskStatus.COMPLETED, TaskStatus.PENDING, TaskStatus.PENDING)
+        )
+    ]
+    for task in tasks:
+        task_repository.add(task)
+    delete_task = DeleteTask(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+    list_tasks = ListTasks(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+    before = list_tasks.execute(list_id=task_list.id, limit=20, offset=0)
+    assert before.completion_percentage == 33.33
+
+    delete_task.execute(list_id=task_list.id, task_id=tasks[1].id)
+    after = list_tasks.execute(list_id=task_list.id, limit=20, offset=0)
+
+    assert after.total == 2
+    assert after.completion_percentage == 50.0

@@ -1,14 +1,14 @@
-"""Caso de uso: listar las tareas de una lista, con filtros (C4) y
-paginación (C5), ordenadas por created_at (C6, delegado al repositorio).
-El porcentaje de completitud no es parte de este caso de uso."""
+"""Caso de uso: listar las tareas de una lista, con filtros (C4),
+paginación (C5), orden por created_at (C6, delegado al repositorio) y
+el porcentaje de completitud global de la lista (C7, C8: ignora los
+filtros aplicados a items/total)."""
 
 from uuid import UUID
 
 from app.application.common import get_task_list_or_raise
-from app.application.page import Page
+from app.application.page import TaskPage
 from app.domain.enums import Priority, TaskStatus
 from app.domain.repositories import TaskListRepository, TaskRepository
-from app.domain.task import Task
 
 
 class ListTasks:
@@ -27,7 +27,7 @@ class ListTasks:
         offset: int,
         status: TaskStatus | None = None,
         priority: Priority | None = None,
-    ) -> Page[Task]:
+    ) -> TaskPage:
         get_task_list_or_raise(self.task_list_repository, list_id)
         items = self.task_repository.list_by_list(
             list_id, limit=limit, offset=offset, status=status, priority=priority
@@ -35,4 +35,12 @@ class ListTasks:
         total = self.task_repository.count_by_list(
             list_id, status=status, priority=priority
         )
-        return Page(items=items, total=total, limit=limit, offset=offset)
+        # Stub temporal: completion_percentage fijo en 0.0, ignora los
+        # conteos reales (rojo pendiente de GREEN).
+        return TaskPage(
+            items=items,
+            total=total,
+            limit=limit,
+            offset=offset,
+            completion_percentage=0.0,
+        )

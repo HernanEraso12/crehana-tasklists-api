@@ -4,6 +4,8 @@ de listado (listas, tareas)."""
 from dataclasses import dataclass
 from typing import Generic, TypeVar
 
+from app.domain.task import Task
+
 T = TypeVar("T")
 
 
@@ -13,3 +15,11 @@ class Page(Generic[T]):
     total: int
     limit: int
     offset: int
+
+
+@dataclass
+class TaskPage(Page[Task]):
+    """Página de tareas con el porcentaje de completitud global de la
+    lista (C7, C8): ignora los filtros aplicados a `items`/`total`."""
+
+    completion_percentage: float
