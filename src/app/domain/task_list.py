@@ -34,4 +34,27 @@ class TaskList:
         name: str | _Unset = UNSET,
         description: str | None | _Unset = UNSET,
     ) -> None:
-        """Stub temporal: no hace nada todavía (rojo pendiente de GREEN)."""
+        """Actualización parcial (C2). `UNSET` significa "no enviado":
+        se conserva el valor actual. Valida el nombre igual que al
+        crear. Solo toca `updated_at` si algo cambió de verdad."""
+        changed = False
+
+        if name is not UNSET:
+            new_name = name.strip()
+            if not new_name:
+                raise InvalidTaskListError("El nombre de la lista es obligatorio.")
+            if len(new_name) > MAX_NAME_LENGTH:
+                raise InvalidTaskListError(
+                    f"El nombre de la lista no puede superar los "
+                    f"{MAX_NAME_LENGTH} caracteres."
+                )
+            if new_name != self.name:
+                self.name = new_name
+                changed = True
+
+        if description is not UNSET and description != self.description:
+            self.description = description
+            changed = True
+
+        if changed:
+            self.updated_at = clock.utcnow()

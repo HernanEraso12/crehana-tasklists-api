@@ -18,9 +18,9 @@ class UpdateTaskList:
         name: str | _Unset = UNSET,
         description: str | None | _Unset = UNSET,
     ) -> TaskList:
-        """Stub temporal: busca la lista pero no aplica los cambios ni
-        persiste todavía (rojo pendiente de GREEN)."""
         task_list = self.repository.get(list_id)
         if task_list is None:
             raise TaskListNotFoundError(list_id)
+        task_list.update(name=name, description=description)
+        self.repository.update(task_list)
         return task_list
