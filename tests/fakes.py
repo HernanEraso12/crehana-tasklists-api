@@ -16,3 +16,10 @@ class InMemoryTaskListRepository:
 
     def get(self, list_id: UUID) -> TaskList | None:
         return self.lists.get(list_id)
+
+    def list(self, limit: int, offset: int) -> list[TaskList]:
+        ordered = sorted(self.lists.values(), key=lambda tl: tl.created_at)
+        return ordered[offset : offset + limit]
+
+    def count(self) -> int:
+        return len(self.lists)
