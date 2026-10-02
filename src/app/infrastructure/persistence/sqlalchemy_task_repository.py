@@ -5,7 +5,6 @@ modelos ORM no se exponen fuera de `infrastructure/persistence`. No
 hace `commit`: el commit lo hace la capa API, una vez por request.
 """
 
-from datetime import datetime, timezone
 from uuid import UUID
 
 from sqlalchemy import case, func, select
@@ -14,14 +13,7 @@ from sqlalchemy.orm import Session
 from app.domain.enums import Priority, TaskStatus
 from app.domain.task import Task
 from app.infrastructure.persistence.models import TaskModel
-
-
-def _as_utc(value: datetime) -> datetime:
-    """SQLite no conserva el offset de zona horaria: lo que vuelve es
-    naive pero representa la misma hora UTC que se guardó."""
-    if value.tzinfo is None:
-        return value.replace(tzinfo=timezone.utc)
-    return value.astimezone(timezone.utc)
+from app.infrastructure.persistence.timestamps import as_utc
 
 
 def _to_domain(model: TaskModel) -> Task:
@@ -32,8 +24,8 @@ def _to_domain(model: TaskModel) -> Task:
         priority=Priority(model.priority),
         status=TaskStatus(model.status),
         id=UUID(model.id),
-        created_at=_as_utc(model.created_at),
-        updated_at=_as_utc(model.updated_at),
+        created_at=as_utc(model.created_at),
+        updated_at=as_utc(model.updated_at),
     )
 
 
