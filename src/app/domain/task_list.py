@@ -20,14 +20,21 @@ class TaskList:
     updated_at: datetime = field(default_factory=lambda: clock.utcnow())
 
     def __post_init__(self) -> None:
-        self.name = self.name.strip()
-        if not self.name:
+        self.name = self._validated_name(self.name)
+
+    @staticmethod
+    def _validated_name(name: str) -> str:
+        """Recorta y valida un nombre de lista (B5). Lo usan tanto la
+        creación como `update`, para que ambas exijan lo mismo."""
+        stripped = name.strip()
+        if not stripped:
             raise InvalidTaskListError("El nombre de la lista es obligatorio.")
-        if len(self.name) > MAX_NAME_LENGTH:
+        if len(stripped) > MAX_NAME_LENGTH:
             raise InvalidTaskListError(
                 f"El nombre de la lista no puede superar los "
                 f"{MAX_NAME_LENGTH} caracteres."
             )
+        return stripped
 
     def update(
         self,
@@ -40,14 +47,7 @@ class TaskList:
         changed = False
 
         if name is not UNSET:
-            new_name = name.strip()
-            if not new_name:
-                raise InvalidTaskListError("El nombre de la lista es obligatorio.")
-            if len(new_name) > MAX_NAME_LENGTH:
-                raise InvalidTaskListError(
-                    f"El nombre de la lista no puede superar los "
-                    f"{MAX_NAME_LENGTH} caracteres."
-                )
+            new_name = self._validated_name(name)
             if new_name != self.name:
                 self.name = new_name
                 changed = True
