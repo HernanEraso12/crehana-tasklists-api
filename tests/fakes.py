@@ -10,6 +10,7 @@ lee de vuelta es una instancia distinta a la que se guardó."""
 from copy import deepcopy
 from uuid import UUID
 
+from app.domain.task import Task
 from app.domain.task_list import TaskList
 
 
@@ -36,3 +37,11 @@ class InMemoryTaskListRepository:
 
     def delete(self, list_id: UUID) -> None:
         self.lists.pop(list_id, None)
+
+
+class InMemoryTaskRepository:
+    def __init__(self) -> None:
+        self.tasks: dict[UUID, Task] = {}
+
+    def add(self, task: Task) -> None:
+        self.tasks[task.id] = deepcopy(task)

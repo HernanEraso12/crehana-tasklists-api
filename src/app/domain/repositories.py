@@ -5,6 +5,7 @@ necesitan: no es un CRUD genérico por adelantado."""
 from typing import Protocol
 from uuid import UUID
 
+from app.domain.task import Task
 from app.domain.task_list import TaskList
 
 
@@ -20,3 +21,7 @@ class TaskListRepository(Protocol):
     def update(self, task_list: TaskList) -> None: ...
 
     def delete(self, list_id: UUID) -> None: ...
+
+
+class TaskRepository(Protocol):
+    def add(self, task: Task) -> None: ...
