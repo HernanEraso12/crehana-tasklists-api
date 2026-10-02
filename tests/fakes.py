@@ -10,6 +10,7 @@ lee de vuelta es una instancia distinta a la que se guardó."""
 from copy import deepcopy
 from uuid import UUID
 
+from app.domain.enums import Priority, TaskStatus
 from app.domain.task import Task
 from app.domain.task_list import TaskList
 
@@ -55,3 +56,37 @@ class InMemoryTaskRepository:
 
     def delete(self, task_id: UUID) -> None:
         self.tasks.pop(task_id, None)
+
+    def _filtered_by_list(
+        self,
+        list_id: UUID,
+        status: TaskStatus | None,
+        priority: Priority | None,
+    ) -> list[Task]:
+        return [
+            task
+            for task in self.tasks.values()
+            if task.list_id == list_id
+            and (status is None or task.status == status)
+            and (priority is None or task.priority == priority)
+        ]
+
+    def list_by_list(
+        self,
+        list_id: UUID,
+        limit: int,
+        offset: int,
+        status: TaskStatus | None = None,
+        priority: Priority | None = None,
+    ) -> list[Task]:
+        filtered = self._filtered_by_list(list_id, status, priority)
+        ordered = sorted(filtered, key=lambda t: t.created_at)
+        return [deepcopy(t) for t in ordered[offset : offset + limit]]
+
+    def count_by_list(
+        self,
+        list_id: UUID,
+        status: TaskStatus | None = None,
+        priority: Priority | None = None,
+    ) -> int:
+        return len(self._filtered_by_list(list_id, status, priority))

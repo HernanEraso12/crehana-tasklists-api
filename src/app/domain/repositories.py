@@ -5,6 +5,7 @@ necesitan: no es un CRUD genérico por adelantado."""
 from typing import Protocol
 from uuid import UUID
 
+from app.domain.enums import Priority, TaskStatus
 from app.domain.task import Task
 from app.domain.task_list import TaskList
 
@@ -31,3 +32,19 @@ class TaskRepository(Protocol):
     def update(self, task: Task) -> None: ...
 
     def delete(self, task_id: UUID) -> None: ...
+
+    def list_by_list(
+        self,
+        list_id: UUID,
+        limit: int,
+        offset: int,
+        status: TaskStatus | None = None,
+        priority: Priority | None = None,
+    ) -> list[Task]: ...
+
+    def count_by_list(
+        self,
+        list_id: UUID,
+        status: TaskStatus | None = None,
+        priority: Priority | None = None,
+    ) -> int: ...
