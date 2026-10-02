@@ -8,3 +8,8 @@ class InvalidTaskListError(Exception):
 
 class InvalidTaskError(Exception):
     """Se lanza cuando una Task no cumple sus reglas de validación (B6)."""
+
+
+class InvalidCompletionCountsError(Exception):
+    """Se lanza cuando los conteos para calcular la completitud (C8) son
+    inválidos: negativos, o `completed` mayor que `total`."""
