@@ -14,4 +14,4 @@ class DeleteTaskList:
         task_list = self.repository.get(list_id)
         if task_list is None:
             raise TaskListNotFoundError(list_id)
-        # Stub temporal: todavía no borra nada (rojo pendiente de GREEN).
+        self.repository.delete(list_id)
