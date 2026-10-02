@@ -9,6 +9,6 @@ class CreateTaskList:
         self.repository = repository
 
     def execute(self, name: str, description: str | None = None) -> TaskList:
-        """Stub temporal: crea la entidad pero no la persiste todavía
-        (rojo pendiente de GREEN)."""
-        return TaskList(name=name, description=description)
+        task_list = TaskList(name=name, description=description)
+        self.repository.add(task_list)
+        return task_list
