@@ -48,4 +48,32 @@ class Task:
         description: str | None | _Unset = UNSET,
         priority: Priority | _Unset = UNSET,
     ) -> None:
-        """Stub temporal: no hace nada todavía (rojo pendiente de GREEN)."""
+        """Actualización parcial (C2). No acepta `status`: solo
+        `change_status` lo cambia (C3). `UNSET` significa "no enviado":
+        se conserva el valor actual. Valida el título igual que al
+        crear. Solo toca `updated_at` si algo cambió de verdad."""
+        changed = False
+
+        if title is not UNSET:
+            new_title = title.strip()
+            if not new_title:
+                raise InvalidTaskError("El título de la tarea es obligatorio.")
+            if len(new_title) > MAX_TITLE_LENGTH:
+                raise InvalidTaskError(
+                    f"El título de la tarea no puede superar los "
+                    f"{MAX_TITLE_LENGTH} caracteres."
+                )
+            if new_title != self.title:
+                self.title = new_title
+                changed = True
+
+        if description is not UNSET and description != self.description:
+            self.description = description
+            changed = True
+
+        if priority is not UNSET and priority != self.priority:
+            self.priority = priority
+            changed = True
+
+        if changed:
+            self.updated_at = clock.utcnow()
