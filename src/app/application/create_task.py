@@ -31,5 +31,5 @@ class CreateTask:
             description=description,
             priority=priority,
         )
-        # Stub temporal: todavía no persiste la tarea (rojo pendiente de GREEN).
+        self.task_repository.add(task)
         return task
