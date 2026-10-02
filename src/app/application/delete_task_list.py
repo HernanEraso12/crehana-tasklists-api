@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from app.domain.exceptions import TaskListNotFoundError
+from app.application.common import get_task_list_or_raise
 from app.domain.repositories import TaskListRepository
 
 
@@ -11,7 +11,5 @@ class DeleteTaskList:
         self.repository = repository
 
     def execute(self, list_id: UUID) -> None:
-        task_list = self.repository.get(list_id)
-        if task_list is None:
-            raise TaskListNotFoundError(list_id)
+        get_task_list_or_raise(self.repository, list_id)
         self.repository.delete(list_id)

@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from app.domain.exceptions import TaskListNotFoundError
+from app.application.common import get_task_list_or_raise
 from app.domain.repositories import TaskListRepository
 from app.domain.sentinels import UNSET, _Unset
 from app.domain.task_list import TaskList
@@ -18,9 +18,7 @@ class UpdateTaskList:
         name: str | _Unset = UNSET,
         description: str | None | _Unset = UNSET,
     ) -> TaskList:
-        task_list = self.repository.get(list_id)
-        if task_list is None:
-            raise TaskListNotFoundError(list_id)
+        task_list = get_task_list_or_raise(self.repository, list_id)
         task_list.update(name=name, description=description)
         self.repository.update(task_list)
         return task_list

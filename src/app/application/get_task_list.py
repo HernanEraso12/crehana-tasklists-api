@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from app.domain.exceptions import TaskListNotFoundError
+from app.application.common import get_task_list_or_raise
 from app.domain.repositories import TaskListRepository
 from app.domain.task_list import TaskList
 
@@ -12,7 +12,4 @@ class GetTaskList:
         self.repository = repository
 
     def execute(self, list_id: UUID) -> TaskList:
-        task_list = self.repository.get(list_id)
-        if task_list is None:
-            raise TaskListNotFoundError(list_id)
-        return task_list
+        return get_task_list_or_raise(self.repository, list_id)
