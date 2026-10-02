@@ -31,3 +31,6 @@ class Task:
                 f"El título de la tarea no puede superar los "
                 f"{MAX_TITLE_LENGTH} caracteres."
             )
+
+    def change_status(self, new_status: TaskStatus) -> None:
+        """Stub temporal: no hace nada todavía (rojo pendiente de GREEN)."""

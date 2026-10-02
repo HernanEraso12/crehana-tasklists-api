@@ -26,7 +26,7 @@
 | # | Decisión | Estado |
 |---|---|---|
 | B1 | Estados: `PENDING`, `IN_PROGRESS`, `COMPLETED`. Estado inicial: `PENDING` | Tomada |
-| B2 | **Cualquier transición está permitida**, incluida volver de `COMPLETED` a `PENDING`. Cambiar al mismo estado es idempotente (200). No se inventa una máquina de estados que el enunciado no pide | Tomada |
+| B2 | **Cualquier transición está permitida**, incluida volver de `COMPLETED` a `PENDING`. Cambiar al mismo estado es idempotente (200) **y no modifica `updated_at`** (no hay cambio real que registrar). No se inventa una máquina de estados que el enunciado no pide | Tomada |
 | B3 | Prioridades: `LOW`, `MEDIUM`, `HIGH`. Por defecto: `MEDIUM` | Tomada |
 | B4 | IDs: UUID v4 | Tomada |
 | B5 | Lista: `name` obligatorio (1-100 caracteres tras recortar espacios al inicio/fin, no vacío), `description` opcional (≤ 500) | Tomada |
