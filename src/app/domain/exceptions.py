@@ -23,3 +23,12 @@ class TaskListNotFoundError(Exception):
     def __init__(self, list_id: UUID) -> None:
         self.list_id = list_id
         super().__init__(f"Task list {list_id} not found")
+
+
+class TaskNotFoundError(Exception):
+    """Se lanza cuando no existe una Task con el id dado, o cuando
+    existe pero en otra lista (B9: no se revela que existe en otra)."""
+
+    def __init__(self, task_id: UUID) -> None:
+        self.task_id = task_id
+        super().__init__(f"Task {task_id} not found")
