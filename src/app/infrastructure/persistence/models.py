@@ -32,8 +32,10 @@ class TaskModel(Base):
     __tablename__ = "tasks"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    # ondelete="CASCADE" (B8): borrar una lista borra sus tareas; es
+    # la base de datos quien lo hace, no un borrado manual en Python.
     list_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("task_lists.id"), nullable=False
+        String(36), ForeignKey("task_lists.id", ondelete="CASCADE"), nullable=False
     )
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     description: Mapped[str | None] = mapped_column(String(1000))
