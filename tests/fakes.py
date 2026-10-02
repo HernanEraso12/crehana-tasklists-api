@@ -49,3 +49,6 @@ class InMemoryTaskRepository:
     def get(self, task_id: UUID) -> Task | None:
         task = self.tasks.get(task_id)
         return deepcopy(task) if task is not None else None
+
+    def update(self, task: Task) -> None:
+        self.tasks[task.id] = deepcopy(task)

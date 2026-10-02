@@ -7,6 +7,7 @@ from uuid import UUID, uuid4
 from app.domain import clock
 from app.domain.enums import Priority, TaskStatus
 from app.domain.exceptions import InvalidTaskError
+from app.domain.sentinels import UNSET, _Unset
 
 MAX_TITLE_LENGTH = 200
 
@@ -40,3 +41,11 @@ class Task:
             return
         self.status = new_status
         self.updated_at = clock.utcnow()
+
+    def update(
+        self,
+        title: str | _Unset = UNSET,
+        description: str | None | _Unset = UNSET,
+        priority: Priority | _Unset = UNSET,
+    ) -> None:
+        """Stub temporal: no hace nada todavía (rojo pendiente de GREEN)."""
