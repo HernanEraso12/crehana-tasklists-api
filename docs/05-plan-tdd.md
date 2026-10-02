@@ -41,7 +41,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 
 ## Fase 5 — Persistencia (`tests/integration/persistence`)
 
-- [ ] Suite de contrato parametrizada: misma batería contra fake y repositorio SQLAlchemy
+- [ ] Suite de contrato parametrizada: misma batería contra fake y repositorio SQLAlchemy (TaskListRepository: hecho; falta TaskRepository)
 - [ ] Borrado en cascada lista → tareas
 - [ ] Completitud calculada con agregación SQL
 - [ ] Migración inicial de Alembic
