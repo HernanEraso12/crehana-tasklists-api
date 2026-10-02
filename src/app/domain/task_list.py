@@ -1,16 +1,13 @@
 """Entidad de dominio TaskList (B5)."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime
 from uuid import UUID, uuid4
 
+from app.domain.clock import utcnow
 from app.domain.exceptions import InvalidTaskListError
 
 MAX_NAME_LENGTH = 100
-
-
-def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
 
 
 @dataclass
@@ -18,8 +15,8 @@ class TaskList:
     name: str
     description: str | None = None
     id: UUID = field(default_factory=uuid4)
-    created_at: datetime = field(default_factory=_utcnow)
-    updated_at: datetime = field(default_factory=_utcnow)
+    created_at: datetime = field(default_factory=utcnow)
+    updated_at: datetime = field(default_factory=utcnow)
 
     def __post_init__(self) -> None:
         self.name = self.name.strip()

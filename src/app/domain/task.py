@@ -1,17 +1,14 @@
 """Entidad de dominio Task (B1, B3, B6)."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime
 from uuid import UUID, uuid4
 
+from app.domain.clock import utcnow
 from app.domain.enums import Priority, TaskStatus
 from app.domain.exceptions import InvalidTaskError
 
 MAX_TITLE_LENGTH = 200
-
-
-def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
 
 
 @dataclass
@@ -22,8 +19,8 @@ class Task:
     priority: Priority = Priority.MEDIUM
     status: TaskStatus = TaskStatus.PENDING
     id: UUID = field(default_factory=uuid4)
-    created_at: datetime = field(default_factory=_utcnow)
-    updated_at: datetime = field(default_factory=_utcnow)
+    created_at: datetime = field(default_factory=utcnow)
+    updated_at: datetime = field(default_factory=utcnow)
 
     def __post_init__(self) -> None:
         self.title = self.title.strip()
