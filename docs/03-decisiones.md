@@ -20,7 +20,7 @@
 | A10 | Configuración con `pydantic-settings` y `DATABASE_URL` | Variables sueltas | Un único punto de cambio de BD entre entornos | Tomada |
 | A11 | flake8 + black + isort (`profile=black`) | ruff | Lo pide el enunciado explícitamente; ruff se menciona como alternativa futura que unificaría flake8 + isort | Tomada |
 | A12 | Código en inglés, documentación en español | Todo en español | Convención de la industria; el evaluador es hispanohablante | Tomada |
-| A13 | Modelos ORM: `id` como `String(36)` (UUID como texto), fechas con `DateTime(timezone=True)`; el repositorio normaliza a UTC al mapear ORM→dominio (`_as_utc`, atribuye tzinfo UTC a un valor naive en vez de reinterpretar la hora) | Tipo nativo `UUID`/`TIMESTAMPTZ` de Postgres | Portabilidad SQLite/Postgres (A7, A8); SQLite no conserva el offset de zona horaria al guardar, así que hay que reatribuirlo al leer, no reconvertir | Tomada |
+| A13 | Modelos ORM: `id` como `String(36)` (UUID como texto), fechas con `DateTime(timezone=True)`; los repositorios normalizan a UTC al mapear ORM→dominio con `infrastructure/persistence/timestamps.as_utc` (compartido entre `SqlAlchemyTaskListRepository` y `SqlAlchemyTaskRepository`: atribuye tzinfo UTC a un valor naive en vez de reinterpretar la hora) | Tipo nativo `UUID`/`TIMESTAMPTZ` de Postgres | Portabilidad SQLite/Postgres (A7, A8); SQLite no conserva el offset de zona horaria al guardar, así que hay que reatribuirlo al leer, no reconvertir | Tomada |
 
 ## B. Reglas de negocio
 
