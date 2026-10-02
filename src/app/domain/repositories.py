@@ -3,9 +3,12 @@ la implementa. Cada `Protocol` solo declara los métodos que sus casos de uso
 necesitan: no es un CRUD genérico por adelantado."""
 
 from typing import Protocol
+from uuid import UUID
 
 from app.domain.task_list import TaskList
 
 
 class TaskListRepository(Protocol):
     def add(self, task_list: TaskList) -> None: ...
+
+    def get(self, list_id: UUID) -> TaskList | None: ...

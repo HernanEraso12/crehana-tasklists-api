@@ -13,3 +13,6 @@ class InMemoryTaskListRepository:
 
     def add(self, task_list: TaskList) -> None:
         self.lists[task_list.id] = task_list
+
+    def get(self, list_id: UUID) -> TaskList | None:
+        return self.lists.get(list_id)
