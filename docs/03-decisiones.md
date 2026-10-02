@@ -29,7 +29,7 @@
 | B2 | **Cualquier transición está permitida**, incluida volver de `COMPLETED` a `PENDING`. Cambiar al mismo estado es idempotente (200). No se inventa una máquina de estados que el enunciado no pide | Tomada |
 | B3 | Prioridades: `LOW`, `MEDIUM`, `HIGH`. Por defecto: `MEDIUM` | Tomada |
 | B4 | IDs: UUID v4 | Tomada |
-| B5 | Lista: `name` obligatorio (1-100 caracteres, sin espacios a los extremos, no vacío), `description` opcional (≤ 500) | Tomada |
+| B5 | Lista: `name` obligatorio (1-100 caracteres tras recortar espacios al inicio/fin, no vacío), `description` opcional (≤ 500) | Tomada |
 | B6 | Tarea: `title` obligatorio (1-200, recortado, no vacío), `description` opcional (≤ 1000), `priority`, `status`. **No se incluye fecha límite** (fuera de alcance, documentado como pendiente) | Tomada |
 | B7 | Nombres de lista **no son únicos**. Sin usuarios no hay un ámbito razonable de unicidad; con usuarios sería único por propietario | Tomada |
 | B8 | Eliminar una lista elimina sus tareas (cascada) | Tomada |
