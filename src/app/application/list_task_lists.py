@@ -11,6 +11,6 @@ class ListTaskLists:
         self.repository = repository
 
     def execute(self, limit: int, offset: int) -> Page[TaskList]:
-        """Stub temporal: siempre devuelve una página vacía fija
-        (rojo pendiente de GREEN)."""
-        return Page(items=[], total=0, limit=limit, offset=offset)
+        items = self.repository.list(limit=limit, offset=offset)
+        total = self.repository.count()
+        return Page(items=items, total=total, limit=limit, offset=offset)
