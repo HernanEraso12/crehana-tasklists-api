@@ -20,7 +20,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 ## Fase 2 — Casos de uso de listas (`tests/unit/application`, con fakes)
 
 - [x] Crear lista
-- [ ] Obtener lista existente / inexistente → `TaskListNotFoundError`
+- [x] Obtener lista existente / inexistente → `TaskListNotFoundError`
 - [ ] Listar listas con paginación
 - [ ] Actualizar lista (parcial) / inexistente
 - [ ] Eliminar lista / inexistente
