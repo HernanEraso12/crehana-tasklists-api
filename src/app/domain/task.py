@@ -33,4 +33,10 @@ class Task:
             )
 
     def change_status(self, new_status: TaskStatus) -> None:
-        """Stub temporal: no hace nada todavía (rojo pendiente de GREEN)."""
+        """Cambia el estado (B2). Cualquier transición está permitida.
+        Si el nuevo estado es el mismo, es idempotente y no toca
+        `updated_at` (no hay un cambio real que registrar)."""
+        if new_status == self.status:
+            return
+        self.status = new_status
+        self.updated_at = clock.utcnow()
