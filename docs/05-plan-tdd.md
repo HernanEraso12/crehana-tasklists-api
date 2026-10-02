@@ -11,7 +11,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 ## Fase 1 — Dominio (`tests/unit/domain`)
 
 - [ ] `TaskStatus` y `Priority` solo aceptan valores válidos
-- [ ] Crear `TaskList` con nombre válido; rechaza vacío, solo espacios y > 100 caracteres
+- [x] Crear `TaskList` con nombre válido; rechaza vacío, solo espacios y > 100 caracteres
 - [ ] Crear `Task` con estado inicial `PENDING` y prioridad por defecto `MEDIUM`
 - [ ] `Task` rechaza título vacío o > 200 caracteres
 - [ ] `task.change_status(...)` permite cualquier transición y actualiza `updated_at`
