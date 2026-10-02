@@ -8,9 +8,7 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import create_engine, event
 from sqlalchemy.orm import Session
-from sqlalchemy.pool import StaticPool
 
 from app.domain import clock
 from app.domain.task_list import TaskList
@@ -19,23 +17,13 @@ from app.infrastructure.persistence.sqlalchemy_task_list_repository import (
     SqlAlchemyTaskListRepository,
 )
 from tests.fakes import InMemoryTaskListRepository
+from tests.integration.persistence.sqlite_support import create_in_memory_sqlite_engine
 
 pytestmark = pytest.mark.integration
 
 
 def _make_sqlalchemy_repository() -> SqlAlchemyTaskListRepository:
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-
-    @event.listens_for(engine, "connect")
-    def _enable_foreign_keys(dbapi_connection, _connection_record) -> None:
-        cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON")
-        cursor.close()
-
+    engine = create_in_memory_sqlite_engine()
     Base.metadata.create_all(engine)
     session = Session(engine)
     return SqlAlchemyTaskListRepository(session)
