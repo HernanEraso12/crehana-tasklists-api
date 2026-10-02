@@ -29,6 +29,10 @@ class ListTasks:
         priority: Priority | None = None,
     ) -> Page[Task]:
         get_task_list_or_raise(self.task_list_repository, list_id)
-        # Stub temporal: siempre devuelve página vacía fija
-        # (rojo pendiente de GREEN).
-        return Page(items=[], total=0, limit=limit, offset=offset)
+        items = self.task_repository.list_by_list(
+            list_id, limit=limit, offset=offset, status=status, priority=priority
+        )
+        total = self.task_repository.count_by_list(
+            list_id, status=status, priority=priority
+        )
+        return Page(items=items, total=total, limit=limit, offset=offset)
