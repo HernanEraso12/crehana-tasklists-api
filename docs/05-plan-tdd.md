@@ -30,7 +30,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 - [x] Crear tarea en lista existente / en lista inexistente → `TaskListNotFoundError`
 - [x] Obtener tarea / inexistente / de otra lista → `TaskNotFoundError`
 - [x] Actualizar tarea (sin tocar estado)
-- [ ] Eliminar tarea
+- [x] Eliminar tarea
 - [ ] Cambiar estado (incluye `COMPLETED` → `PENDING` e idempotencia)
 
 ## Fase 4 — Listado con filtros y completitud
