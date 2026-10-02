@@ -1,4 +1,4 @@
-"""Entidad de dominio Task (B1, B3, B6)."""
+"""Entidad de dominio Task (B1, B2, B3, B6)."""
 
 from dataclasses import dataclass, field
 from datetime import datetime
