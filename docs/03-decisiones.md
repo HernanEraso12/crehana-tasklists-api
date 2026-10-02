@@ -62,6 +62,7 @@
 | D2 | Fakes en memoria para casos de uso; misma suite de contrato contra fake y SQLAlchemy (demuestra LSP) | Tomada |
 | D3 | Markers `unit` / `integration`; `--cov-fail-under=75` en `pytest.ini` | Tomada |
 | D4 | Dockerfile multistage, imagen slim, usuario no root, migraciones al arrancar el contenedor | Tomada |
+| D8 | No se testean `TaskStatus`/`Priority` por separado: son `Enum` estándar de Python, la validación de valores la da el lenguaje. Se cubren implícitamente en los tests de `Task`/`TaskList` que usan sus defaults | Tomada |
 | D5 | **CI con GitHub Actions** (lint, format check, tests, build). Sube de prioridad porque la vacante pide CI/CD explícitamente | Tomada |
 | D6 | `Makefile` con `test`, `lint`, `format`, `up` | Tomada |
 | D7 | No subir `.claude/` ni `CLAUDE.md` al repositorio (por ahora); se excluyen vía `.gitignore` | Tomada |
