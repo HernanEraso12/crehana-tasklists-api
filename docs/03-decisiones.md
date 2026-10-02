@@ -33,7 +33,7 @@
 | B5 | Lista: `name` obligatorio (1-100 caracteres tras recortar espacios al inicio/fin, no vacío), `description` opcional (≤ 500) | Tomada |
 | B6 | Tarea: `title` obligatorio (1-200, recortado, no vacío), `description` opcional (≤ 1000), `priority`, `status`. **No se incluye fecha límite** (fuera de alcance, documentado como pendiente) | Tomada |
 | B7 | Nombres de lista **no son únicos**. Sin usuarios no hay un ámbito razonable de unicidad; con usuarios sería único por propietario | Tomada |
-| B8 | Eliminar una lista elimina sus tareas (cascada) | Tomada |
+| B8 | Eliminar una lista elimina sus tareas (cascada), implementado con `ON DELETE CASCADE` en la FK `tasks.list_id` (con `PRAGMA foreign_keys=ON`, A9) — es la base de datos la que borra, ningún repositorio hace un borrado manual de tareas en Python | Tomada |
 | B9 | Una tarea consultada bajo una lista que no es la suya → **404** (no se revela que existe en otra lista) | Tomada |
 | B10 | `created_at` y `updated_at` en UTC, gestionados por la aplicación | Tomada |
 
