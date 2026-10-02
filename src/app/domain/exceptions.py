@@ -4,3 +4,7 @@
 
 class InvalidTaskListError(Exception):
     """Se lanza cuando una TaskList no cumple sus reglas de validación (B5)."""
+
+
+class InvalidTaskError(Exception):
+    """Se lanza cuando una Task no cumple sus reglas de validación (B6)."""
