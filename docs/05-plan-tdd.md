@@ -49,7 +49,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 ## Fase 6 — API (`tests/integration/api`, `TestClient` + SQLite)
 
 - [x] CRUD de listas: códigos 201/200/204/404/422 y header `Location`
-- [ ] CRUD de tareas, incluido el 404 de tarea en otra lista
+- [x] CRUD de tareas, incluido el 404 de tarea en otra lista
 - [ ] `PATCH .../status`
 - [ ] Listado filtrado con completitud
 - [ ] Formato de error único (404 y 422)
