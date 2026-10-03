@@ -354,7 +354,33 @@ hipótesis, errores que de verdad estaban en el código:
   sin tocar dominio, casos de uso ni repositorios. La fricción real
   sería el pool de conexiones a Postgres entre invocaciones frías.
 
-## 9. Pendientes
+## 9. Bonus implementado
+
+**Notificación ficticia de invitación** (E2, E3)
+
+- *Contexto:* el enunciado ofrece notificaciones como bonus (orden E1:
+  notificación → usuarios/asignación → JWT, la más barata y la que
+  mejor demuestra DIP).
+- *Decisión:* puerto `Notifier` en `domain` (`notify_list_invitation(list_id, email)`),
+  implementado por `LoggingNotifier` en `infrastructure`, que solo
+  registra la invitación en el log — no envía nada de verdad. Caso de
+  uso `InviteToList` valida que la lista exista y delega en el
+  notifier. Lo dispara `POST /api/v1/lists/{list_id}/invitations` con
+  `{"email": EmailStr}`: 202 Accepted con `list_id` y `email`; 404
+  `TASK_LIST_NOT_FOUND` si la lista no existe (sin notificar); 422 si
+  el email es inválido (Pydantic `EmailStr`, dependencia nueva
+  `email-validator`).
+- *Alternativa descartada (E3):* disparar la notificación desde una
+  asignación de responsable (`PATCH .../assignee`). Se descartó porque
+  depende de la entidad `User`/`assignee`, que no existe todavía; el
+  endpoint de invitación es independiente y no bloquea el resto del
+  bonus.
+- *Consecuencias:* reemplazar `LoggingNotifier` por un envío real
+  (email, Slack, etc.) no toca `InviteToList` ni el router, solo la
+  implementación de `infrastructure` y el cableado en
+  `dependencies.py` (DIP).
+
+## 10. Pendientes
 
 ### Fuera de alcance (sección F de `docs/03-decisiones.md`)
 
@@ -375,10 +401,5 @@ hipótesis, errores que de verdad estaban en el código:
 
 | Bonus | Cómo se haría |
 |---|---|
-| Notificación ficticia | puerto `Notifier` en `domain`/`application`; implementación `LoggingNotifier` que solo registra en log (E2). Es el más barato y el que mejor demuestra DIP |
-| Usuarios + asignación de responsable | entidad `User` en el dominio, campo `assignee_id` opcional en `Task`, caso de uso `AssignTask` que dispara la notificación anterior |
+| Usuarios + asignación de responsable | entidad `User` en el dominio, campo `assignee_id` opcional en `Task`, caso de uso `AssignTask` que reutiliza el puerto `Notifier` ya implementado (ver sección 9) |
 | JWT | capa de autenticación (`/auth/register`, `/auth/login`) y un `Depends` que proteja todos los endpoints salvo `/health`, `/auth/*` y `/docs` (E4) |
-
-La decisión E3 (qué dispara la notificación: asignar una tarea, o un
-endpoint de invitación aparte) queda **por confirmar** si se llega a
-implementar el bonus; no se asume una respuesta.

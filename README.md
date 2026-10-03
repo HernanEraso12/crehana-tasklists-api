@@ -158,6 +158,13 @@ make up        # docker compose up --build
 
 Documentación interactiva (Swagger): http://localhost:8000/docs
 
+Incluye el bonus de notificación ficticia (E2/E3): `POST
+/api/v1/lists/{list_id}/invitations` invita por email a colaborar en
+una lista. Responde 202 y dispara un puerto `Notifier` (`LoggingNotifier`)
+que solo registra la invitación en el log, sin enviar nada de verdad —
+pensado para ser reemplazado por un envío real (email, Slack, etc.)
+sin tocar el caso de uso.
+
 Contrato completo, payloads y formato de error en
 [`docs/04-api.md`](docs/04-api.md). Resumen:
 
@@ -174,6 +181,7 @@ Contrato completo, payloads y formato de error en
 | `PATCH` | `/api/v1/lists/{list_id}/tasks/{task_id}` | Actualizar tarea (sin estado) |
 | `PATCH` | `/api/v1/lists/{list_id}/tasks/{task_id}/status` | Cambiar estado |
 | `DELETE` | `/api/v1/lists/{list_id}/tasks/{task_id}` | Eliminar tarea |
+| `POST` | `/api/v1/lists/{list_id}/invitations` | Invitar por email a colaborar en la lista (bonus, notificación ficticia) |
 | `GET` | `/health` | Healthcheck (verifica conexión a la BD) |
 
 ## CI (GitHub Actions)

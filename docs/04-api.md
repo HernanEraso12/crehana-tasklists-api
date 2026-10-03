@@ -17,6 +17,7 @@ Base: `/api/v1`. Documentación interactiva en `/docs` (Swagger) y `/redoc`.
 | PATCH | `/lists/{list_id}/tasks/{task_id}` | Actualizar tarea (sin estado) | 200 | 404, 422 |
 | PATCH | `/lists/{list_id}/tasks/{task_id}/status` | Cambiar estado | 200 | 404, 422 |
 | DELETE | `/lists/{list_id}/tasks/{task_id}` | Eliminar tarea | 204 | 404 |
+| POST | `/lists/{list_id}/invitations` | Invitar por email a colaborar en la lista (bonus E2/E3, notificación ficticia) | 202 | 404, 422 |
 | GET | `/health` (sin prefijo) | Healthcheck con BD | 200 | 503 |
 
 422 en rutas con ID: UUID mal formado.
@@ -83,6 +84,21 @@ Base: `/api/v1`. Documentación interactiva en `/docs` (Swagger) y `/redoc`.
 }
 ```
 
+### Invitación a una lista (bonus)
+
+```jsonc
+// POST /lists/{id}/invitations
+{ "email": "colega@example.com" }
+
+// Respuesta (202 Accepted)
+{ "list_id": "uuid", "email": "colega@example.com" }
+```
+
+No persiste nada ni cambia el estado de la lista: dispara el puerto
+`Notifier` (`LoggingNotifier`, E2), que solo registra la invitación en
+el log. `email` inválido → 422; lista inexistente → 404
+`TASK_LIST_NOT_FOUND` (y no se notifica).
+
 ## Formato de error
 
 ```json
@@ -104,10 +120,10 @@ Base: `/api/v1`. Documentación interactiva en `/docs` (Swagger) y `/redoc`.
 | Error no controlado | 500 | `INTERNAL_ERROR` (sin detalles internos) |
 | `OperationalError` de SQLAlchemy (BD no disponible) | 503 | `SERVICE_UNAVAILABLE` |
 
-## Bonus (si hay tiempo)
+## Bonus pendiente (si hay tiempo)
 
 | Método | Ruta | Descripción |
 |---|---|---|
 | POST | `/auth/register` | Registrar usuario |
 | POST | `/auth/login` | Obtener JWT |
-| PATCH | `/lists/{list_id}/tasks/{task_id}/assignee` | Asignar responsable; dispara notificación ficticia |
+| PATCH | `/lists/{list_id}/tasks/{task_id}/assignee` | Asignar responsable; dispara la misma notificación ficticia (E2) que `/invitations` |

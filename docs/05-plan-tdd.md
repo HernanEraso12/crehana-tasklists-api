@@ -66,6 +66,6 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 
 ## Fase 8 — Bonus (solo si sobra tiempo)
 
-- [ ] Notificación ficticia (`Notifier` + `LoggingNotifier`)
+- [x] Notificación ficticia (`Notifier` + `LoggingNotifier`)
 - [ ] Usuarios + asignación de responsable
 - [ ] JWT

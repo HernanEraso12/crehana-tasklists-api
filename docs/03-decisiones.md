@@ -77,7 +77,7 @@
 |---|---|---|
 | E1 | Orden: notificación ficticia → usuarios + asignación → JWT. La notificación es la más barata y mejor demuestra DIP | Tomada |
 | E2 | Puerto `Notifier` en `domain`/`application`; implementación `LoggingNotifier` que solo registra en log | Tomada |
-| E3 | **Qué dispara la "invitación":** (a) asignar una tarea notifica al responsable, o (b) `POST /lists/{id}/invitations` con un email invita a colaborar en la lista | **Por confirmar** (recomendado: a, reutiliza la asignación) |
+| E3 | **Qué dispara la "invitación":** (b) `POST /lists/{id}/invitations` con un email invita a colaborar en la lista. Valida el email con Pydantic (`EmailStr`); responde 202 Accepted con `list_id` y `email`; 404 `TASK_LIST_NOT_FOUND` si la lista no existe (y no se notifica); 422 si el email es inválido. No depende de la asignación de tareas (alternativa (a), fuera de alcance mientras no haya `User`/`assignee`), así que puede implementarse antes que ese bonus | Tomada |
 | E4 | Si hay JWT: proteger todo excepto `/health`, `/auth/*` y `/docs` | Tomada |
 
 ## F. Fuera de alcance (va a la sección "Pendientes" del DECISION_LOG)
