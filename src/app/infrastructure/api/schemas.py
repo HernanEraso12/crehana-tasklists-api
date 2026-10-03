@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, model_validator
 
 from app.domain.enums import Priority, TaskStatus
 from app.domain.task import Task
@@ -127,3 +127,12 @@ class TaskPageResponse(BaseModel):
     limit: int
     offset: int
     completion_percentage: float
+
+
+class InvitationCreate(BaseModel):
+    email: EmailStr
+
+
+class InvitationResponse(BaseModel):
+    list_id: UUID
+    email: EmailStr

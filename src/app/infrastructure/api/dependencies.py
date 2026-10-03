@@ -17,12 +17,15 @@ from app.application.delete_task import DeleteTask
 from app.application.delete_task_list import DeleteTaskList
 from app.application.get_task import GetTask
 from app.application.get_task_list import GetTaskList
+from app.application.invite_to_list import InviteToList
 from app.application.list_task_lists import ListTaskLists
 from app.application.list_tasks import ListTasks
 from app.application.update_task import UpdateTask
 from app.application.update_task_list import UpdateTaskList
+from app.domain.notifier import Notifier
 from app.domain.repositories import TaskListRepository, TaskRepository
 from app.infrastructure.config import Settings
+from app.infrastructure.notifications import LoggingNotifier
 from app.infrastructure.persistence.database import (
     create_session_factory,
     create_sqlalchemy_engine,
@@ -37,6 +40,7 @@ from app.infrastructure.persistence.sqlalchemy_task_repository import (
 _settings = Settings()
 _engine = create_sqlalchemy_engine(_settings.database_url)
 _session_factory = create_session_factory(_engine)
+_notifier = LoggingNotifier()
 
 
 def get_db_session() -> Iterator[Session]:
@@ -145,3 +149,14 @@ def get_list_tasks_use_case(
     return ListTasks(
         task_list_repository=task_list_repository, task_repository=task_repository
     )
+
+
+def get_notifier() -> Notifier:
+    return _notifier
+
+
+def get_invite_to_list_use_case(
+    repository: TaskListRepository = Depends(get_task_list_repository),
+    notifier: Notifier = Depends(get_notifier),
+) -> InviteToList:
+    return InviteToList(repository=repository, notifier=notifier)
