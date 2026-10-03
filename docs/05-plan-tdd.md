@@ -58,7 +58,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 
 ## Fase 7 — Entrega
 
-- [ ] Dockerfile multistage + `docker-compose.yml` con PostgreSQL; probar `docker compose up` desde cero
+- [x] Dockerfile multistage + `docker-compose.yml` con PostgreSQL; probado `docker compose up --build` desde cero (verificado por el usuario: app y db levantan sanas, `/docs` muestra todos los endpoints)
 - [ ] GitHub Actions
 - [ ] `README.md`
 - [ ] `DECISION_LOG.md` (a partir de `docs/03-decisiones.md`) con sección de pendientes
