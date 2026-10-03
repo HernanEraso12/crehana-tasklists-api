@@ -1,0 +1,45 @@
+# Entornos virtuales
+.venv/
+
+# Control de versiones
+.git/
+.gitignore
+.gitattributes
+
+# Secretos / entorno local
+.env
+local.db
+*.db
+*.sqlite3
+
+# Tests y docs: no se necesitan dentro de la imagen
+tests/
+docs/
+
+# Andamiaje de Claude Code (D7)
+.claude/
+CLAUDE.md
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/*.egg-info/
+
+# Cobertura / cache de tests
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Entrega (no se copian a la imagen; no las necesita en runtime)
+README.md
+DECISION_LOG.md
+Dockerfile
+docker-compose.yml
+.dockerignore
+.github/
