@@ -32,3 +32,7 @@ local.db
 # Andamiaje de Claude Code (D7: por ahora no se sube)
 .claude/
 CLAUDE.md
+
+# Material de preparación personal, no entregable
+docs/02-contexto-empresa.md
+docs/guia-diseno.md
