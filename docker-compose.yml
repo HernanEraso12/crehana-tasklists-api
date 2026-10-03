@@ -7,6 +7,12 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-crehana_tasklists}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      # Expuesto al host para psql/tests locales (p. ej. verificar el
+      # job tests-postgres del CI contra esta misma instancia). Solo
+      # para desarrollo; credenciales de dev documentadas en
+      # .env.example.
+      - "5432:5432"
     healthcheck:
       test:
         [

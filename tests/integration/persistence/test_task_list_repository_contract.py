@@ -11,27 +11,24 @@ import pytest
 
 from app.domain import clock
 from app.domain.task_list import TaskList
-from app.infrastructure.persistence.sqlalchemy_task_list_repository import (
-    SqlAlchemyTaskListRepository,
-)
 from tests.fakes import InMemoryTaskListRepository
 from tests.integration.persistence.sqlite_support import (
     create_sqlalchemy_repositories,
+    dispose_sqlalchemy_repositories,
 )
 
 pytestmark = pytest.mark.integration
 
 
-def _make_sqlalchemy_repository() -> SqlAlchemyTaskListRepository:
-    task_list_repository, _task_repository = create_sqlalchemy_repositories()
-    return task_list_repository
-
-
 @pytest.fixture(params=["fake", "sqlalchemy"])
 def repository(request: pytest.FixtureRequest):
     if request.param == "fake":
-        return InMemoryTaskListRepository()
-    return _make_sqlalchemy_repository()
+        yield InMemoryTaskListRepository()
+        return
+
+    task_list_repository, _task_repository = create_sqlalchemy_repositories()
+    yield task_list_repository
+    dispose_sqlalchemy_repositories(task_list_repository)
 
 
 def test_add_and_get_return_an_equal_task_list(repository) -> None:

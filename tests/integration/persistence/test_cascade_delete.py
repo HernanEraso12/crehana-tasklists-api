@@ -9,13 +9,21 @@ from app.domain.task import Task
 from app.domain.task_list import TaskList
 from tests.integration.persistence.sqlite_support import (
     create_sqlalchemy_repositories,
+    dispose_sqlalchemy_repositories,
 )
 
 pytestmark = pytest.mark.integration
 
 
-def test_deleting_a_list_cascades_to_its_tasks() -> None:
+@pytest.fixture
+def repositories():
     task_list_repository, task_repository = create_sqlalchemy_repositories()
+    yield task_list_repository, task_repository
+    dispose_sqlalchemy_repositories(task_list_repository)
+
+
+def test_deleting_a_list_cascades_to_its_tasks(repositories) -> None:
+    task_list_repository, task_repository = repositories
     task_list = TaskList(name="Sprint 12")
     task_list_repository.add(task_list)
     task = Task(title="Escribir tests", list_id=task_list.id)
@@ -27,8 +35,8 @@ def test_deleting_a_list_cascades_to_its_tasks() -> None:
     assert task_repository.count_by_list(task_list.id) == 0
 
 
-def test_deleting_a_list_does_not_affect_tasks_of_other_lists() -> None:
-    task_list_repository, task_repository = create_sqlalchemy_repositories()
+def test_deleting_a_list_does_not_affect_tasks_of_other_lists(repositories) -> None:
+    task_list_repository, task_repository = repositories
     list_a = TaskList(name="Lista A")
     list_b = TaskList(name="Lista B")
     task_list_repository.add(list_a)

@@ -17,6 +17,7 @@ from app.domain.task_list import TaskList
 from tests.fakes import InMemoryTaskListRepository, InMemoryTaskRepository
 from tests.integration.persistence.sqlite_support import (
     create_sqlalchemy_repositories,
+    dispose_sqlalchemy_repositories,
 )
 
 pytestmark = pytest.mark.integration
@@ -31,8 +32,12 @@ def _make_fake_repositories() -> (
 @pytest.fixture(params=["fake", "sqlalchemy"])
 def repositories(request: pytest.FixtureRequest):
     if request.param == "fake":
-        return _make_fake_repositories()
-    return create_sqlalchemy_repositories()
+        yield _make_fake_repositories()
+        return
+
+    task_list_repository, task_repository = create_sqlalchemy_repositories()
+    yield task_list_repository, task_repository
+    dispose_sqlalchemy_repositories(task_list_repository)
 
 
 def _new_list(task_list_repository, name: str = "Sprint 12") -> TaskList:
