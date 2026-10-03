@@ -44,7 +44,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 - [x] Suite de contrato parametrizada: misma batería contra fake y repositorio SQLAlchemy
 - [x] Borrado en cascada lista → tareas
 - [x] Completitud calculada con agregación SQL (`completion_counts`)
-- [ ] Migración inicial de Alembic
+- [x] Migración inicial de Alembic
 
 ## Fase 6 — API (`tests/integration/api`, `TestClient` + SQLite)
 

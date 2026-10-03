@@ -14,6 +14,7 @@
 | A4 | Python 3.12 + `uv` + `pyproject.toml` | pip + requirements.txt | Herramientas modernas (criterio evaluado), lockfile reproducible | Tomada |
 | A5 | SQLAlchemy 2.0 **síncrono** | SQLAlchemy async | Menos complejidad, sobre todo en tests; FastAPI ejecuta endpoints síncronos en threadpool | Tomada |
 | A6 | Alembic para migraciones | `create_all()` | Evolución de esquema controlada, como en producción | Tomada |
+| A6a | `alembic/env.py`: `target_metadata = Base.metadata`, `render_as_batch=True` (SQLite no soporta `ALTER TABLE` directo), URL desde `Settings.DATABASE_URL` salvo que `alembic.ini` (`sqlalchemy.url`, vacío por defecto) o un `config.set_main_option(...)` la sobrescriban; usa el mismo `create_sqlalchemy_engine` que la app, para que el `PRAGMA foreign_keys=ON` de SQLite (A9) también aplique al migrar | Tomada |
 | A7 | **PostgreSQL** en docker-compose; **SQLite en memoria** para tests | Solo SQLite / solo PostgreSQL | Postgres alineado al stack de Crehana; SQLite hace los tests rápidos y sin dependencias. Riesgo de diferencias de dialecto mitigado con tipos genéricos y un job de CI opcional contra Postgres | Tomada |
 | A8 | Enums guardados como `String`, no tipo nativo | Enum nativo de Postgres | Portabilidad entre SQLite y Postgres; migraciones simples | Tomada |
 | A9 | SQLite: `PRAGMA foreign_keys=ON` por conexión y `StaticPool` en tests | — | Sin el pragma no hay integridad ni cascada; sin `StaticPool` cada conexión ve otra BD | Tomada |
