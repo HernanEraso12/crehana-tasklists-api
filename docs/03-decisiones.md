@@ -36,7 +36,7 @@
 | B7 | Nombres de lista **no son únicos**. Sin usuarios no hay un ámbito razonable de unicidad; con usuarios sería único por propietario | Tomada |
 | B8 | Eliminar una lista elimina sus tareas (cascada), implementado con `ON DELETE CASCADE` en la FK `tasks.list_id` (con `PRAGMA foreign_keys=ON`, A9) — es la base de datos la que borra, ningún repositorio hace un borrado manual de tareas en Python | Tomada |
 | B9 | Una tarea consultada bajo una lista que no es la suya → **404** (no se revela que existe en otra lista) | Tomada |
-| B10 | `created_at` y `updated_at` en UTC, gestionados por la aplicación | Tomada |
+| B10 | `created_at` y `updated_at` en UTC, gestionados por la aplicación. Al crear, ambos son **idénticos** (se llama al reloj una sola vez; bug encontrado en pruebas manuales con Docker: dos `default_factory` independientes producían microsegundos distintos) | Tomada |
 
 ## C. Contrato de la API
 
