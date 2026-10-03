@@ -119,3 +119,11 @@ class TaskResponse(BaseModel):
             created_at=task.created_at,
             updated_at=task.updated_at,
         )
+
+
+class TaskPageResponse(BaseModel):
+    items: list[TaskResponse]
+    total: int
+    limit: int
+    offset: int
+    completion_percentage: float

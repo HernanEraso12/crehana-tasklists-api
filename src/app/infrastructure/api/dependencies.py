@@ -18,6 +18,7 @@ from app.application.delete_task_list import DeleteTaskList
 from app.application.get_task import GetTask
 from app.application.get_task_list import GetTaskList
 from app.application.list_task_lists import ListTaskLists
+from app.application.list_tasks import ListTasks
 from app.application.update_task import UpdateTask
 from app.application.update_task_list import UpdateTaskList
 from app.domain.repositories import TaskListRepository, TaskRepository
@@ -133,5 +134,14 @@ def get_change_task_status_use_case(
     task_repository: TaskRepository = Depends(get_task_repository),
 ) -> ChangeTaskStatus:
     return ChangeTaskStatus(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+
+
+def get_list_tasks_use_case(
+    task_list_repository: TaskListRepository = Depends(get_task_list_repository),
+    task_repository: TaskRepository = Depends(get_task_repository),
+) -> ListTasks:
+    return ListTasks(
         task_list_repository=task_list_repository, task_repository=task_repository
     )
