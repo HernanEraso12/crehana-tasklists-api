@@ -144,7 +144,8 @@ uv run flake8                                          # linter (.flake8: max-li
 uv run black --check . && uv run isort --check-only .  # formato (sin aplicar)
 ```
 
-Atajos del `Makefile`:
+Atajos del `Makefile` (requiere **GNU make**: Linux, macOS o WSL en
+Windows; `make` no viene instalado por defecto en Windows/Git Bash):
 
 ```bash
 make install   # uv sync
