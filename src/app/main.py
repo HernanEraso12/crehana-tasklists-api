@@ -4,6 +4,7 @@ from fastapi import FastAPI
 
 from app.infrastructure.api.error_handlers import register_error_handlers
 from app.infrastructure.api.routers.task_lists import router as task_lists_router
+from app.infrastructure.api.routers.tasks import router as tasks_router
 
 app = FastAPI(
     title="Crehana Task Lists API",
@@ -12,3 +13,4 @@ app = FastAPI(
 
 register_error_handlers(app)
 app.include_router(task_lists_router)
+app.include_router(tasks_router)
