@@ -61,7 +61,7 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 - [x] Dockerfile multistage + `docker-compose.yml` con PostgreSQL; probado `docker compose up --build` desde cero contra PostgreSQL real (verificado por el usuario: `/health`, CRUD completo, cambio de estado, `completion_percentage` 50.0 calculado en SQL, filtro por prioridad sin alterar el porcentaje, `DELETE` con 204 y cascada confirmada con `SELECT count(*) = 0`)
 - [x] GitHub Actions (quality, tests, tests-postgres, docker; `tests-postgres` verificado localmente contra Postgres real: 100/100 en ~11s)
 - [x] `README.md`
-- [ ] `DECISION_LOG.md` (a partir de `docs/03-decisiones.md`) con sección de pendientes
+- [x] `DECISION_LOG.md` (a partir de `docs/03-decisiones.md`) con sección de pendientes
 - [ ] Verificar cobertura ≥ 75%, flake8, black e isort en limpio
 
 ## Fase 8 — Bonus (solo si sobra tiempo)
