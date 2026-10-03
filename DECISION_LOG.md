@@ -436,3 +436,41 @@ hipótesis, errores que de verdad estaban en el código:
 |---|---|
 | Usuarios + asignación de responsable | entidad `User` en el dominio, campo `assignee_id` opcional en `Task`, caso de uso `AssignTask` que reutiliza el puerto `Notifier` ya implementado (ver sección 9) |
 | JWT | capa de autenticación (`/auth/register`, `/auth/login`) y un `Depends` que proteja todos los endpoints salvo `/health`, `/auth/*` y `/docs` (E4) |
+
+### CVEs heredadas de la imagen base (`python:3.12-slim`)
+
+Un análisis de la imagen Docker reporta 4 CVE, todas heredadas de la
+imagen base, ninguna del código de la aplicación ni de sus
+dependencias Python: dos de `libstdc++`, una de `zlib` y una de
+`PCRE2`. Tres no tienen corrección disponible todavía en los
+repositorios de Debian al momento del análisis.
+
+Ninguna es alcanzable desde esta aplicación:
+
+- Las dos de `libstdc++` afectan a código C++; esta API no ejecuta
+  C++ propio ni invoca bibliotecas que lo hagan en una ruta expuesta.
+- La de `zlib` requiere un patrón de uso específico de `gzprintf` que
+  el stack (FastAPI, SQLAlchemy, Alembic, `psycopg[binary]`) no
+  ejercita.
+- La de `PCRE2` exige una expresión regular controlada por el
+  atacante evaluada con esa librería; la API no acepta ni evalúa
+  regex de entrada del cliente en ningún endpoint.
+
+**No se modificó el `Dockerfile` a propósito**, para no sacrificar
+reproducibilidad (A4, D4: imagen slim, reproducible, sin fijar una
+versión de parche de Debian a mano que quedaría desactualizada el día
+siguiente). La mitigación real es de proceso, no de código, y se
+haría en producción con:
+
+1. **Fijar la imagen base por digest** (`FROM python:3.12-slim@sha256:...`)
+   en vez de por tag flotante, para que los rebuilds sean reproducibles
+   bit a bit y cualquier cambio de base sea una decisión explícita
+   (un commit que actualiza el digest), no un `apt` silencioso.
+2. **Reconstruir periódicamente** (p. ej. semanalmente, vía un cron en
+   CI) para recoger los parches de seguridad que Debian publique sobre
+   esa misma base, y actualizar el digest fijado cuando correspondan.
+3. **Job de escaneo de vulnerabilidades en el pipeline** (Trivy o
+   Docker Scout) que corra sobre la imagen construida y falle el build
+   según un umbral de severidad (p. ej. CRITICAL/HIGH con corrección
+   disponible), para no depender de revisar el reporte a mano en cada
+   release.
