@@ -52,9 +52,9 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 - [x] CRUD de tareas, incluido el 404 de tarea en otra lista
 - [x] `PATCH .../status`
 - [x] Listado filtrado con completitud
-- [ ] Formato de error único (404 y 422)
-- [ ] UUID inválido → 422
-- [ ] `/health`
+- [x] Formato de error único (404 y 422)
+- [x] UUID inválido → 422
+- [x] `/health`
 
 ## Fase 7 — Entrega
 
