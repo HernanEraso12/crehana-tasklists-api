@@ -9,6 +9,10 @@ from app.infrastructure.api.routers.list_tasks import router as list_tasks_route
 from app.infrastructure.api.routers.task_lists import router as task_lists_router
 from app.infrastructure.api.routers.task_status import router as task_status_router
 from app.infrastructure.api.routers.tasks import router as tasks_router
+from app.infrastructure.config import Settings
+from app.infrastructure.logging_config import configure_logging
+
+configure_logging(Settings().log_level)
 
 app = FastAPI(
     title="Crehana Task Lists API",

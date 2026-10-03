@@ -18,8 +18,14 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
+# disable_existing_loggers=False (default True): alembic.command.upgrade
+# puede correr en el mismo proceso que la app o la suite de tests
+# (test_migrations.py); con el default, fileConfig deshabilita
+# permanentemente cualquier logger ya creado (p. ej. "app",
+# configurado por app.infrastructure.logging_config) que no esté
+# listado en alembic.ini.
 if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 # Los modelos ORM son la fuente de verdad para autogenerate.
 target_metadata = Base.metadata
