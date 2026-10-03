@@ -92,8 +92,9 @@ def test_missing_status_field_returns_422(client: TestClient) -> None:
 def test_missing_task_returns_404_task_not_found(client: TestClient) -> None:
     task_list = _create_list(client)
 
+    missing_task_id = "00000000-0000-0000-0000-000000000000"
     response = client.patch(
-        f"/api/v1/lists/{task_list['id']}/tasks/00000000-0000-0000-0000-000000000000/status",
+        f"/api/v1/lists/{task_list['id']}/tasks/{missing_task_id}/status",
         json={"status": "COMPLETED"},
     )
 

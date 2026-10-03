@@ -10,6 +10,7 @@ from collections.abc import Iterator
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from app.application.change_task_status import ChangeTaskStatus
 from app.application.create_task import CreateTask
 from app.application.create_task_list import CreateTaskList
 from app.application.delete_task import DeleteTask
@@ -123,5 +124,14 @@ def get_delete_task_use_case(
     task_repository: TaskRepository = Depends(get_task_repository),
 ) -> DeleteTask:
     return DeleteTask(
+        task_list_repository=task_list_repository, task_repository=task_repository
+    )
+
+
+def get_change_task_status_use_case(
+    task_list_repository: TaskListRepository = Depends(get_task_list_repository),
+    task_repository: TaskRepository = Depends(get_task_repository),
+) -> ChangeTaskStatus:
+    return ChangeTaskStatus(
         task_list_repository=task_list_repository, task_repository=task_repository
     )

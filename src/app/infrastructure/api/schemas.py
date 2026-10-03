@@ -89,6 +89,14 @@ class TaskUpdate(BaseModel):
         return self.model_dump(exclude_unset=True)
 
 
+class TaskStatusUpdate(BaseModel):
+    # extra="forbid": un PATCH .../status solo cambia el estado (C3);
+    # cualquier otro campo en el body se rechaza.
+    model_config = ConfigDict(extra="forbid")
+
+    status: TaskStatus
+
+
 class TaskResponse(BaseModel):
     id: UUID
     list_id: UUID
