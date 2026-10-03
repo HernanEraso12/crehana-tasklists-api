@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import OperationalError
 
 from app.domain.exceptions import (
     InvalidCompletionCountsError,
@@ -67,6 +68,18 @@ async def _handle_internal_error(_request: Request, _exc: Exception) -> JSONResp
     )
 
 
+async def _handle_database_unavailable(
+    _request: Request, _exc: OperationalError
+) -> JSONResponse:
+    """La BD no responde (C12): /health y cualquier otro endpoint que
+    la toque devuelven 503 en vez del 500 genérico."""
+    return _error_response(
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "SERVICE_UNAVAILABLE",
+        "La base de datos no está disponible.",
+    )
+
+
 def register_error_handlers(app: FastAPI) -> None:
     app.add_exception_handler(TaskListNotFoundError, _handle_task_list_not_found)
     app.add_exception_handler(TaskNotFoundError, _handle_task_not_found)
@@ -76,4 +89,5 @@ def register_error_handlers(app: FastAPI) -> None:
         InvalidCompletionCountsError, _handle_invalid_domain_value
     )
     app.add_exception_handler(RequestValidationError, _handle_validation_error)
+    app.add_exception_handler(OperationalError, _handle_database_unavailable)
     app.add_exception_handler(Exception, _handle_internal_error)

@@ -102,6 +102,7 @@ Base: `/api/v1`. Documentación interactiva en `/docs` (Swagger) y `/redoc`.
 | `InvalidTaskListError` / `InvalidTaskError` (regla de dominio) | 422 | `VALIDATION_ERROR` |
 | Validación Pydantic (`RequestValidationError`) | 422 | `VALIDATION_ERROR` (con `details`) |
 | Error no controlado | 500 | `INTERNAL_ERROR` (sin detalles internos) |
+| `OperationalError` de SQLAlchemy (BD no disponible) | 503 | `SERVICE_UNAVAILABLE` |
 
 ## Bonus (si hay tiempo)
 
