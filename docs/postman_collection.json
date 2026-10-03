@@ -1,0 +1,231 @@
+{
+  "info": {
+    "_postman_id": "397a4bdf-ac71-4d57-a559-2b45e6ec993c",
+    "name": "prueba para software engiinerr",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18014087"
+  },
+  "item": [
+    {
+      "name": "Verificar la cascada",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post crear lista",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "  {\r\n    \"name\": \"Prueba\"\r\n  }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/lists",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "lists"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "post crear  2 tareas",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\": \"Tarea 2\", \"priority\": \"HIGH\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/lists/7fac8801-bffa-43db-906f-40d1ae245a84/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "lists",
+            "7fac8801-bffa-43db-906f-40d1ae245a84",
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "completar tarea 1",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": " {\r\n    \"status\": \"COMPLETED\"\r\n  }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/lists/7fac8801-bffa-43db-906f-40d1ae245a84/tasks/1fc0214e-82c9-43d0-8c46-8c8e6fbeef2a/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "lists",
+            "7fac8801-bffa-43db-906f-40d1ae245a84",
+            "tasks",
+            "1fc0214e-82c9-43d0-8c46-8c8e6fbeef2a",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listado con completitud",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/lists/7fac8801-bffa-43db-906f-40d1ae245a84/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "lists",
+            "7fac8801-bffa-43db-906f-40d1ae245a84",
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "El porcentaje ignora los filtros",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/lists/7fac8801-bffa-43db-906f-40d1ae245a84/tasks?priority=HIGH",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "lists",
+            "7fac8801-bffa-43db-906f-40d1ae245a84",
+            "tasks"
+          ],
+          "query": [
+            {
+              "key": "priority",
+              "value": "HIGH"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "eliminar lista",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/v1/lists/7fac8801-bffa-43db-906f-40d1ae245a84",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "lists",
+            "7fac8801-bffa-43db-906f-40d1ae245a84"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "revisar notificacion",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\": \"alguien@ejemplo.com\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/lists/0b770601-3522-41f6-bda4-9986c2940490/invitations",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "v1",
+            "lists",
+            "0b770601-3522-41f6-bda4-9986c2940490",
+            "invitations"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
