@@ -4,7 +4,7 @@ uso (`CLAUDE.md`)."""
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Response, status
+from fastapi import APIRouter, Depends, Response, status
 
 from app.application.create_task_list import CreateTaskList
 from app.application.delete_task_list import DeleteTaskList
@@ -18,6 +18,7 @@ from app.infrastructure.api.dependencies import (
     get_list_task_lists_use_case,
     get_update_task_list_use_case,
 )
+from app.infrastructure.api.pagination import LimitQuery, OffsetQuery
 from app.infrastructure.api.schemas import (
     TaskListCreate,
     TaskListPageResponse,
@@ -43,8 +44,8 @@ def create_task_list(
 
 @router.get("/lists", response_model=TaskListPageResponse)
 def list_task_lists(
-    limit: int = Query(default=20, ge=1, le=100),
-    offset: int = Query(default=0, ge=0),
+    limit: LimitQuery = 20,
+    offset: OffsetQuery = 0,
     use_case: ListTaskLists = Depends(get_list_task_lists_use_case),
 ) -> TaskListPageResponse:
     page = use_case.execute(limit=limit, offset=offset)

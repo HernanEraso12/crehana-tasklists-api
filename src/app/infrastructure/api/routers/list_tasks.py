@@ -10,6 +10,7 @@ from fastapi import APIRouter, Depends, Query
 from app.application.list_tasks import ListTasks
 from app.domain.enums import Priority, TaskStatus
 from app.infrastructure.api.dependencies import get_list_tasks_use_case
+from app.infrastructure.api.pagination import LimitQuery, OffsetQuery
 from app.infrastructure.api.schemas import TaskPageResponse, TaskResponse
 
 router = APIRouter(prefix="/api/v1/lists/{list_id}/tasks", tags=["tasks"])
@@ -20,8 +21,8 @@ def list_tasks(
     list_id: UUID,
     status: TaskStatus | None = Query(default=None),
     priority: Priority | None = Query(default=None),
-    limit: int = Query(default=20, ge=1, le=100),
-    offset: int = Query(default=0, ge=0),
+    limit: LimitQuery = 20,
+    offset: OffsetQuery = 0,
     use_case: ListTasks = Depends(get_list_tasks_use_case),
 ) -> TaskPageResponse:
     page = use_case.execute(
