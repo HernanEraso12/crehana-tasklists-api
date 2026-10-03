@@ -4,9 +4,9 @@ Cada ítem es un ciclo rojo → verde → refactor con sus commits. Marcar al co
 
 ## Fase 0 — Esqueleto (sin lógica, un solo commit `chore:`)
 
-- [ ] Estructura de carpetas, `pyproject.toml` con `uv`, `pytest.ini`, `.flake8`, config de black/isort
-- [ ] `.gitignore`, `.env.example`, `Makefile`
-- [ ] Un test trivial que pase para validar que pytest y la cobertura funcionan
+- [x] Estructura de carpetas, `pyproject.toml` con `uv`, `pytest.ini`, `.flake8`, config de black/isort
+- [x] `.gitignore`, `.env.example`, `Makefile`
+- [x] Un test trivial que pase para validar que pytest y la cobertura funcionan
 
 ## Fase 1 — Dominio (`tests/unit/domain`)
 
