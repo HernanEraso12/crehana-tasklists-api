@@ -4,8 +4,7 @@ API REST de listas de tareas (prueba técnica Backend — Crehana). Permite
 crear listas, agregar tareas dentro de ellas, cambiar su estado y
 consultarlas con filtros, paginación y porcentaje de completitud.
 
-Contexto completo del ejercicio y decisiones de negocio en
-[`docs/02-contexto-empresa.md`](docs/02-contexto-empresa.md) y
+Decisiones de negocio y técnicas completas en
 [`docs/03-decisiones.md`](docs/03-decisiones.md).
 
 ## Arquitectura
