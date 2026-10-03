@@ -51,6 +51,7 @@
 | C7 | Respuesta del listado de tareas: `items`, `total` (filtrado), `limit`, `offset`, `completion_percentage` | Tomada |
 | C8 | `completion_percentage` = completadas / totales × 100 sobre **toda la lista, sin filtros**; float con 2 decimales; **0.0** si la lista no tiene tareas; calculado con agregación SQL, no cargando tareas en memoria. La fórmula y el redondeo viven en `domain.completion.completion_percentage(completed, total)`, una función pura; la agregación SQL (Fase 5) solo obtiene los conteos y delega el cálculo a esta función | Tomada |
 | C9 | Formato de error único: `{"error": {"code", "message", "details"}}`, incluyendo los 422 de validación | Tomada |
+| C9a | `error_handlers.py` es el único lugar que traduce excepciones a HTTP: dominio → `VALIDATION_ERROR`/`*_NOT_FOUND`; `RequestValidationError` de Pydantic/FastAPI (body, query, UUID de path) → `VALIDATION_ERROR` con `details`, serializados con `jsonable_encoder` porque `exc.errors()` puede traer la excepción cruda de un `model_validator` (no serializable directo); los schemas Pydantic no repiten reglas de negocio ya validadas en el dominio (p. ej. B5), solo tipado/presencia y reglas propias de la API (C2: body sin campos) | Tomada |
 | C10 | 201 incluye header `Location` con la URL del recurso creado | Tomada |
 | C11 | Sin HATEOAS completo: OpenAPI cubre el descubrimiento. Links solo en `Location` | Tomada |
 | C12 | `GET /health` verifica conexión a BD (200 / 503) | Tomada |
