@@ -17,10 +17,15 @@ class TaskList:
     description: str | None = None
     id: UUID = field(default_factory=uuid4)
     created_at: datetime = field(default_factory=lambda: clock.utcnow())
-    updated_at: datetime = field(default_factory=lambda: clock.utcnow())
+    # UNSET (no datetime real) como default: __post_init__ lo detecta
+    # y copia created_at, para no llamar al reloj dos veces y que
+    # ambos campos salgan idénticos al crear.
+    updated_at: datetime | _Unset = field(default=UNSET)
 
     def __post_init__(self) -> None:
         self.name = self._validated_name(self.name)
+        if self.updated_at is UNSET:
+            self.updated_at = self.created_at
 
     @staticmethod
     def _validated_name(name: str) -> str:
