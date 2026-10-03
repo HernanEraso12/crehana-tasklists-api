@@ -73,6 +73,7 @@ Variables (ver [`.env.example`](.env.example)):
 | Variable | Para qué |
 |---|---|
 | `DATABASE_URL` | URL de conexión que usa la app (y Alembic). Por defecto, SQLite local (`sqlite:///./local.db`); la línea de PostgreSQL está comentada, para usarse al correr fuera de Docker contra un Postgres propio |
+| `LOG_LEVEL` | nivel del logger `app` (p. ej. `LoggingNotifier`, bonus E2). Por defecto `INFO`; se ve en stdout junto a los logs de uvicorn (ver [`DECISION_LOG.md`](DECISION_LOG.md), sección 7) |
 | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | credenciales del servicio `db` de `docker-compose.yml`. Son valores por defecto **solo para desarrollo**; `docker-compose` construye `DATABASE_URL` del contenedor `app` a partir de estas tres, no hace falta repetirla |
 
 ## Ejecución local (SQLite, sin Docker)

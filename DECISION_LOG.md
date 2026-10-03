@@ -331,6 +331,39 @@ hipótesis, errores que de verdad estaban en el código:
   verificar a mano el job `tests-postgres` del CI. Solucionado
   cerrando sesión (con `rollback` primero) y liberando el motor
   (`dispose()`) al final de cada test de integración.
+- **El logging de `app` nunca se configuraba.** `LoggingNotifier`
+  llamaba a `logger.info(...)`, pero nada en `main.py` fijaba nivel ni
+  handler para el logger `app`: el logger raíz, sin configurar, filtra
+  en `WARNING` por defecto, así que el mensaje nunca llegaba a ningún
+  lado. Era invisible en desarrollo porque los tests unitarios y de
+  integración no revisan stdout, solo el código de respuesta (202) y,
+  cuando corresponde, el estado fake del notifier — y el 202 sí
+  llegaba, porque el endpoint no depende de que el log se vea.
+  Detectado en Docker al probar el bonus a mano: `POST
+  .../invitations` devolvía 202 pero `docker compose logs app` no
+  mostraba ninguna línea de la invitación. Solucionado con
+  `app.infrastructure.logging_config.configure_logging(level)`,
+  llamado desde `main.py` con el nivel de `Settings.log_level`
+  (`LOG_LEVEL`, por defecto `INFO`): fija nivel y un `StreamHandler` a
+  stdout en el logger `app`, sin tocar el logger raíz ni la
+  configuración propia de logging de uvicorn.
+- **`alembic/env.py` deshabilitaba el logger `app` al correr en el
+  mismo proceso.** El `env.py` generado por Alembic llama a
+  `fileConfig(config.config_file_name)` sin más argumentos, y el
+  default de `fileConfig` es `disable_existing_loggers=True`: deja
+  `disabled = True` en cualquier logger ya creado que no esté listado
+  en `alembic.ini` (como `app`), de forma permanente para el resto del
+  proceso. En Docker esto no se nota porque `docker-entrypoint.sh`
+  corre `alembic upgrade head` como proceso separado y luego hace
+  `exec uvicorn ...`, que arranca en un proceso nuevo sin ese estado.
+  Pero `tests/integration/persistence/test_migrations.py` sí llama a
+  `alembic.command.upgrade()` en el mismo proceso que el resto de la
+  suite de `pytest`, así que el fallo solo aparecía si ese test corría
+  antes del nuevo test de `LoggingNotifier` con `caplog` — invisible
+  en `pytest -m unit` o al correr el archivo de `LoggingNotifier`
+  suelto, y solo visible con la suite completa en cierto orden de
+  recolección. Solucionado pasando
+  `disable_existing_loggers=False` a `fileConfig` en `env.py`.
 
 ## 8. Evolución
 
