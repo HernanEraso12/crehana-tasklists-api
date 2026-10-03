@@ -95,3 +95,14 @@ class InMemoryTaskRepository:
         all_in_list = self._filtered_by_list(list_id, status=None, priority=None)
         completed = sum(1 for t in all_in_list if t.status == TaskStatus.COMPLETED)
         return completed, len(all_in_list)
+
+
+class InMemoryNotifier:
+    """Fake del puerto Notifier (E2): registra las invitaciones
+    disparadas en vez de enviarlas."""
+
+    def __init__(self) -> None:
+        self.invitations: list[tuple[UUID, str]] = []
+
+    def notify_list_invitation(self, list_id: UUID, email: str) -> None:
+        self.invitations.append((list_id, email))
