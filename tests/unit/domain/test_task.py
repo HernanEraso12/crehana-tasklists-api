@@ -59,6 +59,25 @@ def test_accepts_title_of_exactly_200_characters() -> None:
     assert len(task.title) == 200
 
 
+def test_created_at_and_updated_at_are_identical_on_creation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Dos valores distintos en llamadas sucesivas: si el reloj se
+    # llamara dos veces (una por campo), created_at y updated_at no
+    # coincidirían. Solo pasa si se llama una sola vez.
+    timestamps = iter(
+        [
+            datetime(2026, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc),
+            datetime(2026, 1, 1, 0, 0, 0, 500, tzinfo=timezone.utc),
+        ]
+    )
+    monkeypatch.setattr(clock, "utcnow", lambda: next(timestamps))
+
+    task = Task(title="Escribir tests", list_id=uuid4())
+
+    assert task.created_at == task.updated_at
+
+
 def test_change_status_updates_the_status() -> None:
     task = Task(title="Escribir tests", list_id=uuid4())
 

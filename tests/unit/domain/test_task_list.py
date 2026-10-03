@@ -84,6 +84,26 @@ def test_update_rejects_invalid_name_without_changing_anything() -> None:
     assert task_list.description == "Original"
 
 
+def test_created_at_and_updated_at_are_identical_on_creation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Dos valores distintos en llamadas sucesivas: si el reloj se
+    # llamara dos veces (una por campo), created_at y updated_at
+    # tomarían el primer y el segundo valor respectivamente, y no
+    # coincidirían. Solo pasan si se llama una sola vez.
+    timestamps = iter(
+        [
+            datetime(2026, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc),
+            datetime(2026, 1, 1, 0, 0, 0, 500, tzinfo=timezone.utc),
+        ]
+    )
+    monkeypatch.setattr(clock, "utcnow", lambda: next(timestamps))
+
+    task_list = TaskList(name="Sprint 12")
+
+    assert task_list.created_at == task_list.updated_at
+
+
 def test_update_only_touches_updated_at_when_something_changes(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
