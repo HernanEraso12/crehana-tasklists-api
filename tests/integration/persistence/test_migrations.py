@@ -36,13 +36,19 @@ def _alembic_config_for(database_url: str) -> Config:
     return config
 
 
-def test_migration_creates_a_schema_with_cascade_delete(tmp_path: Path) -> None:
+@pytest.fixture
+def migrated_database_url(tmp_path: Path) -> str:
+    """Aplica 'alembic upgrade head' sobre un SQLite temporal y
+    devuelve su URL, lista para usarse."""
     database_url = f"sqlite:///{tmp_path / 'test.db'}"
-    config = _alembic_config_for(database_url)
+    upgrade(_alembic_config_for(database_url), "head")
+    return database_url
 
-    upgrade(config, "head")
 
-    engine = create_sqlalchemy_engine(database_url)
+def test_migration_creates_a_schema_with_cascade_delete(
+    migrated_database_url: str,
+) -> None:
+    engine = create_sqlalchemy_engine(migrated_database_url)
     session = Session(engine)
     task_list_repository = SqlAlchemyTaskListRepository(session)
     task_repository = SqlAlchemyTaskRepository(session)
@@ -56,13 +62,8 @@ def test_migration_creates_a_schema_with_cascade_delete(tmp_path: Path) -> None:
     assert task_repository.get(task.id) is None
 
 
-def test_models_match_migrations(tmp_path: Path) -> None:
-    database_url = f"sqlite:///{tmp_path / 'test.db'}"
-    config = _alembic_config_for(database_url)
-
-    upgrade(config, "head")
-
-    engine = create_sqlalchemy_engine(database_url)
+def test_models_match_migrations(migrated_database_url: str) -> None:
+    engine = create_sqlalchemy_engine(migrated_database_url)
     with engine.connect() as connection:
         migration_context = MigrationContext.configure(connection)
         diff = compare_metadata(migration_context, Base.metadata)
