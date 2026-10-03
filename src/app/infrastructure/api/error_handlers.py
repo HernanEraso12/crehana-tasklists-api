@@ -57,14 +57,14 @@ async def _handle_validation_error(
     return _error_response(
         status.HTTP_422_UNPROCESSABLE_CONTENT,
         "VALIDATION_ERROR",
-        "Error de validación.",
+        "Validation error.",
         details=jsonable_encoder(exc.errors()),
     )
 
 
 async def _handle_internal_error(_request: Request, _exc: Exception) -> JSONResponse:
     return _error_response(
-        status.HTTP_500_INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Error interno."
+        status.HTTP_500_INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Internal error."
     )
 
 
@@ -76,7 +76,7 @@ async def _handle_database_unavailable(
     return _error_response(
         status.HTTP_503_SERVICE_UNAVAILABLE,
         "SERVICE_UNAVAILABLE",
-        "La base de datos no está disponible.",
+        "Database is unavailable.",
     )
 
 

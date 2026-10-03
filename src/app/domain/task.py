@@ -37,11 +37,10 @@ class Task:
         creación como `update`, para que ambas exijan lo mismo."""
         stripped = title.strip()
         if not stripped:
-            raise InvalidTaskError("El título de la tarea es obligatorio.")
+            raise InvalidTaskError("The task title is required.")
         if len(stripped) > MAX_TITLE_LENGTH:
             raise InvalidTaskError(
-                f"El título de la tarea no puede superar los "
-                f"{MAX_TITLE_LENGTH} caracteres."
+                f"The task title cannot exceed {MAX_TITLE_LENGTH} characters."
             )
         return stripped
 

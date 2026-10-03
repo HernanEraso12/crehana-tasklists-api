@@ -29,7 +29,7 @@ class TaskListUpdate(BaseModel):
     @model_validator(mode="after")
     def _at_least_one_field(self) -> "TaskListUpdate":
         if not self.model_fields_set:
-            raise ValueError("Debe enviar al menos un campo para actualizar.")
+            raise ValueError("At least one field must be provided for update.")
         return self
 
     def to_use_case_kwargs(self) -> dict[str, Any]:
@@ -82,7 +82,7 @@ class TaskUpdate(BaseModel):
     @model_validator(mode="after")
     def _at_least_one_field(self) -> "TaskUpdate":
         if not self.model_fields_set:
-            raise ValueError("Debe enviar al menos un campo para actualizar.")
+            raise ValueError("At least one field must be provided for update.")
         return self
 
     def to_use_case_kwargs(self) -> dict[str, Any]:

@@ -33,11 +33,10 @@ class TaskList:
         creación como `update`, para que ambas exijan lo mismo."""
         stripped = name.strip()
         if not stripped:
-            raise InvalidTaskListError("El nombre de la lista es obligatorio.")
+            raise InvalidTaskListError("The task list name is required.")
         if len(stripped) > MAX_NAME_LENGTH:
             raise InvalidTaskListError(
-                f"El nombre de la lista no puede superar los "
-                f"{MAX_NAME_LENGTH} caracteres."
+                f"The task list name cannot exceed {MAX_NAME_LENGTH} characters."
             )
         return stripped
 
