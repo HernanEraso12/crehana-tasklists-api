@@ -8,12 +8,12 @@ ORM y las migraciones (equivalente a `alembic check`, vía
 from pathlib import Path
 
 import pytest
+from sqlalchemy.orm import Session
+
 from alembic.autogenerate import compare_metadata
 from alembic.command import upgrade
 from alembic.config import Config
 from alembic.migration import MigrationContext
-from sqlalchemy.orm import Session
-
 from app.domain.task import Task
 from app.domain.task_list import TaskList
 from app.infrastructure.persistence.database import Base, create_sqlalchemy_engine

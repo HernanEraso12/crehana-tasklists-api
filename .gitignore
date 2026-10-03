@@ -19,6 +19,7 @@ htmlcov/
 # Bases de datos locales
 *.db
 *.sqlite3
+local.db
 
 # Entorno / secretos
 .env
